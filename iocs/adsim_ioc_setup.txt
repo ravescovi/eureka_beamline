@@ -1,3 +1,14 @@
+Directory Structure:
+
+└── ./
+    └── st_base.cmd
+
+
+
+---
+File: /st_base.cmd
+---
+
  Must have loaded envPaths via st.cmd*
 
 errlogInit(20000)
@@ -67,4 +78,5 @@ iocInit()
 # save things every thirty seconds
 create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")
 dbl > dbl-all.txt
+
 
