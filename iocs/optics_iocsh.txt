@@ -1,0 +1,19 @@
+### Slits (If not supplied, RELTOCENTER defaults to zero)
+dbLoadRecords("$(OPTICS)/opticsApp/Db/2slit.db","P=$(PREFIX),SLIT=Slit1V,mXp=m49,mXn=m50,RELTOCENTER=0")
+dbLoadRecords("$(OPTICS)/opticsApp/Db/2slit.db","P=$(PREFIX),SLIT=Slit1H,mXp=m51,mXn=m52,RELTOCENTER=0")
+
+### Optical tables
+epicsEnvSet("DIR", "$(OPTICS)/opticsApp/Db")
+dbLoadRecords("$(DIR)/table.db","P=$(PREFIX),Q=Table1,T=table1,M0X=m35,M0Y=m36,M1Y=m37,M2X=m38,M2Y=m39,M2Z=m40,GEOM=SRI")
+#dbLoadRecords("$(DIR)/table.db","P=$(PREFIX),Q=Table1,T=table1,M0X=m35,M0Y=m36,M1Y=m37,M2X=m38,M2Y=m39,M2Z=m40,GEOM=NEWPORT")
+#dbLoadRecords("$(DIR)/table.db","P=$(PREFIX),Q=Table2,T=table2,M0X=m1,M0Y=m2,M1Y=m3,M2X=m4,M2Y=m5,M2Z=m6,GEOM=SRI")
+
+# Coarse/Fine stage
+dbLoadRecords("$(OPTICS)/opticsApp/Db/CoarseFineMotor.db","P=$(PREFIX)cf1:,PM=$(PREFIX),CM=m33,FM=m34")
+
+# monochromator
+iocshLoad("$(OPTICS)/iocsh/kohzu_mono.iocsh", "PREFIX=$(PREFIX), M_THETA=m45,M_Y=m46,M_Z=m47, YOFF_LO=17.4999,YOFF_HI=17.5001, GEOM=1, LOG=kohzuCtl.log")
+
+# add Slit2 (2slit_soft.vdb): m53-m56
+dbLoadRecords("$(OPTICS)/opticsApp/Db/2slit_soft.vdb","P=$(PREFIX),SLIT=Slit2V,mXp=m53,mXn=m54,PAIRED_WITH=Slit2H")
+dbLoadRecords("$(OPTICS)/opticsApp/Db/2slit_soft.vdb","P=$(PREFIX),SLIT=Slit2H,mXp=m55,mXn=m56,PAIRED_WITH=Slit2V")
