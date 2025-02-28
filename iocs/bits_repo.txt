@@ -1,0 +1,5235 @@
+Directory Structure:
+
+└── ./
+    ├── .github
+    │   ├── ISSUE_TEMPLATE
+    │   │   ├── bug_report.md
+    │   │   ├── config.yml
+    │   │   ├── feature_request.md
+    │   │   ├── other.md
+    │   │   └── question-issue-template.md
+    │   ├── workflows
+    │   │   ├── code.yml
+    │   │   └── docs.yml
+    │   └── dependabot.yml
+    ├── docs
+    │   ├── source
+    │   │   ├── _static
+    │   │   │   └── .gitkeep
+    │   │   ├── api
+    │   │   │   ├── callbacks.rst
+    │   │   │   ├── configs.rst
+    │   │   │   ├── core.rst
+    │   │   │   ├── devices.rst
+    │   │   │   ├── index.rst
+    │   │   │   ├── plans.rst
+    │   │   │   ├── startup.rst
+    │   │   │   └── utils.rst
+    │   │   ├── guides
+    │   │   │   ├── dm.md
+    │   │   │   └── index.rst
+    │   │   ├── conf.py
+    │   │   ├── console.rst
+    │   │   ├── demo.ipynb
+    │   │   ├── index.rst
+    │   │   ├── install.rst
+    │   │   ├── license.rst
+    │   │   ├── logging_config.rst
+    │   │   ├── notebook.rst
+    │   │   ├── qserver.rst
+    │   │   ├── script.rst
+    │   │   └── sessions.rst
+    │   ├── make.bat
+    │   └── Makefile
+    ├── qserver
+    │   ├── qs_host.sh
+    │   ├── qs-config.yml
+    │   └── user_group_permissions.yaml
+    ├── src
+    │   └── instrument
+    │       ├── beamline
+    │       │   └── __init__.py
+    │       ├── callbacks
+    │       │   ├── __init__.py
+    │       │   ├── nexus_data_file_writer.py
+    │       │   └── spec_data_file_writer.py
+    │       ├── configs
+    │       │   ├── __init__.py
+    │       │   ├── devices_aps_only.yml
+    │       │   ├── devices.yml
+    │       │   ├── iconfig.yml
+    │       │   └── logging.yml
+    │       ├── core
+    │       │   ├── __init__.py
+    │       │   ├── best_effort_init.py
+    │       │   ├── catalog_init.py
+    │       │   └── run_engine_init.py
+    │       ├── devices
+    │       │   └── __init__.py
+    │       ├── plans
+    │       │   ├── __init__.py
+    │       │   ├── dm_plans.py
+    │       │   └── sim_plans.py
+    │       ├── tests
+    │       │   ├── __init__.py
+    │       │   ├── test_general.py
+    │       │   └── test_stored_dict.py
+    │       ├── utils
+    │       │   ├── __init__.py
+    │       │   ├── aps_functions.py
+    │       │   ├── config_loaders.py
+    │       │   ├── controls_setup.py
+    │       │   ├── helper_functions.py
+    │       │   ├── logging_setup.py
+    │       │   ├── make_devices_yaml.py
+    │       │   ├── metadata.py
+    │       │   └── stored_dict.py
+    │       ├── __init__.py
+    │       ├── LICENSE
+    │       └── startup.py
+    ├── .gitignore
+    ├── .pre-commit-config.yaml
+    ├── pyproject.toml
+    └── README.md
+
+
+
+---
+File: /.github/ISSUE_TEMPLATE/bug_report.md
+---
+
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: 'bug'
+assignees: ''
+
+---
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Code with explanation
+2. How to run code
+3. The error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Environment (please complete the following information):**
+ - OS: [e.g. Linux]
+ -  Package versions implicated in the error (torch, mdlearn versions, etc)
+
+**Additional context**
+Add any other context about the problem here.
+
+
+
+---
+File: /.github/ISSUE_TEMPLATE/config.yml
+---
+
+blank_issues_enabled: false
+
+
+
+---
+File: /.github/ISSUE_TEMPLATE/feature_request.md
+---
+
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: 'enhancement'
+assignees: ''
+
+---
+
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+**Describe alternatives you've considered**
+A clear and concise description of any alternative solutions or features you've considered.
+
+**Additional context**
+Add any other context or screenshots about the feature request here.
+
+
+
+---
+File: /.github/ISSUE_TEMPLATE/other.md
+---
+
+---
+name: Other issue template
+about: Any issue that does not fit the other templates
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+**Description**
+
+
+
+---
+File: /.github/ISSUE_TEMPLATE/question-issue-template.md
+---
+
+---
+name: Question issue template
+about: Ask a question about how to use mdlearn
+title: ''
+labels: question
+assignees: ''
+
+---
+
+**Describe the question**
+
+
+
+---
+File: /.github/workflows/code.yml
+---
+
+name: Unit Tests & Code Coverage
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # allow manual triggering
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  lint:
+    name: Code style
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Upgrade pip & test with pre-commit
+        run: |
+          set -vxeuo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install pre-commit
+          pre-commit run --all-files
+
+  test-matrix:
+    name: Python ${{ matrix.python-version }} # - Redis ${{ matrix.redis-version }}
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      matrix:
+        python-version:
+          - "3.11"
+          - "3.12"
+          # - "3.13"  waiting for upstream packages
+        # redis-version:
+        #   # - "6"
+        #   - "7"
+      max-parallel: 5
+    env:
+      DISPLAY: ":99.0"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OS libraries to test Linux PyQt apps
+        run: |
+          sudo apt update -y
+          sudo apt install -y \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libxkbcommon-x11-0 \
+            screen \
+            x11-utils \
+            xvfb
+
+      # FIXME: conflicts if redis is running on host (local runners)
+      # - name: Start Redis
+      #   uses: supercharge/redis-github-action@1.7.0
+      #   with:
+      #     redis-version: ${{ matrix.redis-version }}
+      #     redis-remove-container: true # false by default
+
+      - name: Create environment Python ${{ matrix.python-version }} # - Redis ${{ matrix.redis-version }}
+        # needed for Unpack step
+        uses: mamba-org/setup-micromamba@v2
+        with:
+          cache-environment: true
+          cache-environment-key: env-key-${{ matrix.python-version }}
+          condarc: |
+            channels:
+              - conda-forge
+              - nodefaults
+            channel-priority: flexible
+          # environment-file: environment.yml
+          environment-name: anaconda-test-env-py-${{ matrix.python-version }} # -${{ matrix.redis-version }}
+          create-args: >-
+            coveralls
+            pytest
+            pytest-cov
+            pytest-qt
+            pytest-xvfb
+            python=${{ matrix.python-version }}
+            setuptools-scm
+            pyqt>5.15
+            pyepics
+
+      - name: Install this package with pip
+        shell: bash -l {0}
+        run: |
+          set -vxeuo pipefail
+          pip install -e .
+
+      - name: Run tests with pytest & coverage
+        shell: bash -l {0}
+        run: |
+          set -vxeuo pipefail
+          coverage run --concurrency=thread --parallel-mode -m pytest -vvv --exitfirst .
+          coverage combine
+          coverage report --precision 3
+
+      - name: Upload coverage data to coveralls.io
+        shell: bash -l {0}
+        run: |
+          set -vxeuo pipefail
+          micromamba list coveralls
+          which coveralls
+          coveralls debug
+          if [ "${GITHUB_TOKEN}" != "" ]; then
+            # only upload from GitHub runner
+            coveralls --service=github
+          else
+            echo "No credentials for upload to coveralls."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_FLAG_NAME: ${{ matrix.python-version }} # -${{ matrix.redis-version }}
+          COVERALLS_PARALLEL: true
+
+  # https://coveralls-python.readthedocs.io/en/latest/usage/configuration.html#github-actions-support
+  coveralls:
+    name: Report unit test coverage to coveralls
+    needs: test-matrix
+    runs-on: ubuntu-latest
+    container: python:3-slim
+
+    steps:
+      - name: Gather coverage and report to Coveralls
+        run: |
+          set -vxeuo pipefail
+          echo "Finally!"
+          pip3 install --upgrade coveralls
+          # debug mode: output prepared json and reported files list to stdout
+          # https://coveralls-python.readthedocs.io/en/latest/troubleshooting.html
+          coveralls debug
+          if [ "${GITHUB_TOKEN}" != "" ]; then
+            # only upload from GitHub runner
+            coveralls --service=github --finish
+          else
+            echo "No credentials for upload to coveralls."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+---
+File: /.github/workflows/docs.yml
+---
+
+name: Publish Sphinx docs to GitHub Pages
+# see: https://github.com/marketplace/actions/sphinx-to-github-pages
+
+on:
+  # Build the docs on pushes to main branch, PRs to main branch, and new tags.
+  # Publish only on demand.
+  push:
+    branches:
+      - main
+    tags:
+      - '*'  # all tags
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:   # allow manual triggering
+    inputs:
+      deploy:
+        description: 'Deploy documentation'
+        type: boolean
+        required: true
+        default: false
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+
+  pages:
+    name: Publish documentation
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Deploy Information
+      if: ${{ github.event.inputs.deploy }}
+      run: |
+        echo "The docs will be published from this workflow run."
+
+    - name: Install pandoc
+      run: |
+        set -vxeuo pipefail
+        sudo apt-get update
+        sudo apt-get -y install pandoc
+
+    - name: Set time zone
+      run: echo "TZ=America/Chicago" >> "$GITHUB_ENV"
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # required for push to dest repo
+
+    - uses: actions/setup-python@v5
+      with:
+          python-version: "3.11"
+
+    - name: Install our package
+      run: pip install -e .[doc]
+
+    - name: Sphinx
+      id: deployment
+      run: make -C docs html
+
+    - name: Publish (push gh-pages branch) only on demand
+      uses: peaceiris/actions-gh-pages@v4
+      if: ${{ github.event.inputs.deploy }}
+      with:
+        publish_branch: gh-pages
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/build/html
+        force_orphan: true
+
+
+
+---
+File: /.github/dependabot.yml
+---
+
+# Set update schedule for GitHub Actions
+# https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: "weekly"
+
+
+
+---
+File: /docs/source/_static/.gitkeep
+---
+
+
+
+
+---
+File: /docs/source/api/callbacks.rst
+---
+
+.. _api.callbacks:
+
+``instrument.callbacks``
+========================
+
+Add Python modules here that receive and handle information from other Bluesky
+controls.
+
+.. autosummary::
+    :nosignatures:
+
+    ~instrument.callbacks.nexus_data_file_writer
+    ~instrument.callbacks.spec_data_file_writer
+
+.. automodule:: instrument.callbacks.nexus_data_file_writer
+.. automodule:: instrument.callbacks.spec_data_file_writer
+
+
+
+---
+File: /docs/source/api/configs.rst
+---
+
+.. _api.configs:
+
+``instrument.configs``
+======================
+
+Configuration files related to this Bluesky instrument package. Configuration of
+the bluesky queueserver host process (QS host) is described  in the :ref:`qserver`
+section.
+
+.. _api.configs.iconfig:
+
+``iconfig.yml``
+---------------
+
+Various constants and terms used to configure the instrument package.
+
+.. literalinclude:: ../../../src/instrument/configs/iconfig.yml
+    :language: yaml
+    :linenos:
+
+.. _api.configs.devices:
+
+``devices.yml``
+------------------------------
+
+Declarations of the ophyd (and ophyd-like) devices and signals used by the
+instrument package.  Configuration is used by the guarneri package to create the
+objects.
+
+.. literalinclude:: ../../../src/instrument/configs/devices.yml
+    :language: yaml
+    :linenos:
+
+.. _api.configs.devices_aps_only:
+
+``devices_aps_only.yml``
+------------------------------
+
+Declarations of the ophyd (and ophyd-like) devices and signals
+only available when Bluesky is used at the APS.
+
+.. literalinclude:: ../../../src/instrument/configs/devices_aps_only.yml
+    :language: yaml
+    :linenos:
+
+
+
+---
+File: /docs/source/api/core.rst
+---
+
+.. _api.core:
+
+``instrument.core``
+===================
+
+Create the core components of Bluesky data acquisition, in the order required by
+their function. (e.g., timeout defaults must be set before any ophyd objects are
+created)
+
+.. autosummary::
+    :nosignatures:
+
+    ~instrument.core.best_effort_init
+    ~instrument.core.catalog_init
+    ~instrument.core.run_engine_init
+
+.. automodule:: instrument.core.best_effort_init
+.. automodule:: instrument.core.catalog_init
+.. automodule:: instrument.core.run_engine_init
+
+
+
+---
+File: /docs/source/api/devices.rst
+---
+
+.. _api.devices:
+
+``instrument.devices``
+======================
+
+See the advice below to declare your instrument's ophyd-style in YAML files:
+
+* :ref:`api.configs.devices`
+* :ref:`api.configs.devices_aps_only`
+
+The `instrument.startup` module calls ``RE(make_devices())`` to
+make the devices as described.
+
+Declare all devices
+-------------------
+
+All ophyd-style devices are declared in one of the two YAML files listed above:
+
+* when code (classes, factory functions) is provided by a package:
+  * refer to the package class (or function) directly in the YAML file
+* when local customization is needed (new support or modify a packaged class):
+  * create local custom code that defines the class or factory
+  * refer to local custom code in the YAML file
+
+Any device can be created with python code that is compatible with
+this API signature:
+
+.. code-block:: py
+    :linenos:
+
+    callable(*, prefix="", name="", labels=[], **kwargs)
+
+.. rubric:: Quick example
+
+An ophyd object for an EPICS motor PV ``gp:m1`` is created in Python code where
+``ophyd.EpicsMotor`` is the *callable*, ``"gp:m1"`` is the `prefix`, and the
+other kwargs are ``name`` and ``labels``.
+
+.. code-block:: py
+    :linenos:
+
+    import ophyd
+    m1 = ophyd.EpicsMotor("ioc:m1", name="m1", labels=["motor"])
+
+This YAML replaces all the Python code above to create the ``m1`` object:
+
+.. code-block:: yaml
+    :linenos:
+
+    ophyd.EpicsMotor:
+    - name: "m1"
+      prefix: "ioc:m1"
+      labels: ["motor"]
+
+.. tip:: The devices are (re)created each time ``RE(make_devices())`` is run.
+
+    If you edit either of these YAML files after starting your session, you can
+    run ``RE(make_devices())`` again (without restarting your session) to
+    (re)create the devices.  You only need to restart your session if you edit
+    the Python code.
+
+    The :func:`~instrument.utils.make_devices_yaml.make_devices()` plan stub
+    imports the callable and creates any devices listed below it.  In YAML:
+
+    * Each callable can only be listed once.
+    * All devices that are created with a callable are listed below it.
+    * Each device starts with a `-` and then the kwargs, as shown.
+
+    Indentation is important. Follow the examples.
+
+.. tip::  These YAML representations are functionally equivalent:
+
+    See `yaml.org <https://yaml.org>`_ for more information and YAML examples.
+
+    .. code-block:: yaml
+        :linenos:
+
+        ophyd.EpicsMotor:
+        - name: m1
+          prefix: ioc:m1
+          labels:
+            - motor
+
+        ophyd.EpicsMotor:
+        - {name: m1, prefix: ioc:m1, labels: ["motor"]}
+
+        ophyd.EpicsMotor: [{name: m1, prefix: ioc:m1, labels: ["motor"]}]
+
+Examples
+--------
+
+Examples are provided to show how to define your ophyd-style devices.
+
+Packaged support
+++++++++++++++++
+
+Packaged support exists for many structures (motors, scalers,
+area detectors, slits, shutters, ...).
+
+Motors
+~~~~~~
+
+When support is used for more than one device, create a YAML list. Each item in
+the list can be a dictionary with appropriate keyword arguments. This YAML code
+describes five motors, using a one-line format for each dictionary.
+
+.. code-block:: yaml
+    :linenos:
+
+    ophyd.EpicsMotor:
+    - {name: m1, prefix: ioc:m1, labels: ["motor"]}
+    - {name: m2, prefix: ioc:m2, labels: ["motor"]}
+    - {name: m3, prefix: ioc:m3, labels: ["motor"]}
+    - {name: dx, prefix: vme:m58:c0:m1, labels: ["motor"]}
+    - {name: dy, prefix: vme:m58:c0:m2, labels: ["motor"]}
+
+Scalers
+~~~~~~~
+
+This example creates a single scaler named `scaler`.  Two keyword
+arguments are provided.
+
+.. code-block:: yaml
+    :linenos:
+
+    ophyd.scaler.ScalerCH:
+    - name: scaler
+      prefix: ioc:scaler1
+      labels: ["scalers", "detectors"]
+
+Area detectors
+~~~~~~~~~~~~~~
+
+An area detector factory (from the ``apstools`` package) can be used to
+declare one or more area detector devices.  Here's an instance of
+ADSimDetector with various plugins.
+
+.. code-block:: yaml
+    :linenos:
+
+    apstools.devices.ad_creator:
+    - name: adsimdet
+      prefix: "ad:"
+      labels: ["area_detector", "detectors"]
+      plugins:
+      - cam:
+            class: apstools.devices.SimDetectorCam_V34
+      - image
+      - pva
+      - hdf1:
+            class: apstools.devices.AD_EpicsFileNameHDF5Plugin
+            read_path_template: "/mnt/iocad/tmp/"
+            write_path_template: "/tmp/"
+      - roi1
+      - stats1
+
+Local custom devices
+++++++++++++++++++++
+
+Sometimes, a package provides support that requires some local customization.
+
+diffractometers
+~~~~~~~~~~~~~~~
+
+While the ``hklpy`` package provides a 6-circle diffractometer, it does
+not provide a class with name substitutions for the motor axes.  We need those
+substitutions to describe our diffractometer's motor assignments.
+(That's a DIY feature for improvement in a future version of ``hklpy``.) We'll have
+to make some local code that provides motor name substitutions as keyword
+arguments.
+
+Here's the local support code (in new file
+``src/instrument/devices/diffractometers.py``):
+
+.. code-block:: py
+    :linenos:
+
+    """Diffractometers"""
+
+    import hkl
+    from ophyd import Component
+    from ophyd import EpicsMotor
+    from ophyd import EpicsSignalRO
+    from ophyd import FormattedComponent as FCpt
+
+    class SixCircle(hkl.SimMixin, hkl.E6C):
+        """
+        Our 6-circle.  Eulerian.
+
+        Energy obtained (RO) from monochromator.
+        """
+
+        # the reciprocal axes are defined by SimMixin
+
+        mu = FCpt(EpicsMotor, "{prefix}{m_mu}", kind="hinted", labels=["motor"])
+        omega = FCpt(EpicsMotor, "{prefix}{m_omega}", kind="hinted", labels=["motor"])
+        chi = FCpt(EpicsMotor, "{prefix}{m_chi}", kind="hinted", labels=["motor"])
+        phi = FCpt(EpicsMotor, "{prefix}{m_phi}", kind="hinted", labels=["motor"])
+        gamma = FCpt(EpicsMotor, "{prefix}{m_gamma}", kind="hinted", labels=["motor"])
+        delta = FCpt(EpicsMotor, "{prefix}{m_delta}", kind="hinted", labels=["motor"])
+
+        energy = Component(EpicsSignalRO, "BraggERdbkAO", kind="hinted", labels=["energy"])
+        energy_units = Component(EpicsSignalRO, "BraggERdbkAO.EGU", kind="config")
+
+        def __init__(  # noqa D107
+            self,
+            prefix,
+            *,
+            m_mu="",
+            m_omega="",
+            m_chi="",
+            m_phi="",
+            m_gamma="",
+            m_delta="",
+            **kwargs,
+        ):
+            self.m_mu = m_mu
+            self.m_omega = m_omega
+            self.m_chi = m_chi
+            self.m_phi = m_phi
+            self.m_gamma = m_gamma
+            self.m_delta = m_delta
+            super().__init__(prefix, **kwargs)
+
+The YAML description of our 6-circle diffractometer uses our local
+custom ``SixCircle`` support with the assigned motors and other kwargs:
+
+.. code-block:: yaml
+    :linenos:
+
+    instrument.devices.diffractometers.SixCircle:
+    - name: sixc
+      prefix: "gp:"
+      labels: ["diffractometer"]
+      m_mu: m23
+      m_omega: m24
+      m_chi: m25
+      m_phi: m26
+      m_gamma: m27
+      m_delta: m28
+
+Using the devices
+-----------------
+
+The :func:`instrument.utils.make_devices_yaml.make_devices()` plan stub adds all
+devices to the command line level (the ``__main__`` namespace, as Python calls
+it).  Plans or other code can obtain a reference to any of these devices through
+use of the :data:`~instrument.utils.controls_setup.oregistry`.  The default
+instrument provides a ``shutter`` device. This ``setup_shutter`` plan stub
+configures the shutter to wait a finite time every time it opens or closes.
+
+.. code-block:: py
+    :linenos:
+
+    def setup_shutter(delay=0.05):
+        """
+        Setup the shutter.
+
+        Simulate a shutter that needs a finite recovery time after moving.
+        """
+        yield from bps.null()  # makes it a plan (generator function)
+
+        shutter = oregistry["shutter"]
+        shutter.wait_for_connection()
+        shutter.delay_s = delay
+
+With this YAML content:
+
+.. code-block:: yaml
+    :linenos:
+
+    apstools.synApps.UserCalcsDevice: [{name: user_calcs, prefix: "gp:"}]
+
+you might have a plan stub that needs two of the userCalcs.  The ``oregistry``
+can provide them to your plan stub:
+
+.. code-block:: py
+    :linenos:
+
+    dither_x = oregistry["user_calcs.calc9"]
+    dither_y = oregistry["user_calcs.calc10"]
+
+
+
+---
+File: /docs/source/api/index.rst
+---
+
+.. _api:
+
+API: The Source Code
+====================
+
+The instrument model is described by this directory structure:
+
+.. code-block:: text
+    :linenos:
+
+    docs/source         sphinx documentation source
+    pyproject.toml      project configuration
+    qserver/                 files for running a queueserver host process
+    src/                Python source code tree
+        instrument/     root of the 'instrument' package
+            startup.py  Python code to setup a session for Bluesky data acquisition
+            callbacks/  receive and handle info from other code
+            configs/    configuration files
+            core/       create core components of Bluesky data acquisition
+            devices/    your instrument's controls
+            plans/      your instrument's measurement procedures
+            utils/      other code to setup or use your instrument
+
+A Bluesky data acquisition session :ref:`begins with <api.startup>`:
+
+.. code-block:: py
+
+    from instrument.startup import *
+
+The ``instrument/`` directory is described in the following sections.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   startup
+   callbacks
+   configs
+   core
+   devices
+   plans
+   utils
+
+
+
+---
+File: /docs/source/api/plans.rst
+---
+
+.. _api.plans:
+
+``instrument.plans``
+====================
+
+Python modules that describe your instrument's custom measurement procedures.
+
+.. autosummary::
+    :nosignatures:
+
+    ~instrument.plans.dm_plans
+    ~instrument.plans.sim_plans
+
+.. automodule:: instrument.plans.dm_plans
+.. automodule:: instrument.plans.sim_plans
+
+
+
+---
+File: /docs/source/api/startup.rst
+---
+
+.. _api.startup:
+
+``instrument.startup``
+======================
+
+This same code can be used with IPython console & Jupyter notebook sessions and
+the bluesky queueserver.  Use this inspiration to build your own custom startup
+procedures.
+
+.. autosummary::
+    :nosignatures:
+
+    ~instrument.startup
+
+.. literalinclude:: ../../../src/instrument/startup.py
+    :language: python
+    :linenos:
+
+.. automodule:: instrument.startup
+
+
+
+---
+File: /docs/source/api/utils.rst
+---
+
+.. _api.utils:
+
+``instrument.utils``
+====================
+
+Add Python modules here that provide any other code not covered by callbacks,
+configs, core, devices, or plans.
+
+.. autosummary::
+    :nosignatures:
+
+    ~instrument.utils.aps_functions
+    ~instrument.utils.config_loaders
+    ~instrument.utils.controls_setup
+    ~instrument.utils.helper_functions
+    ~instrument.utils.logging_setup
+    ~instrument.utils.make_devices_yaml
+    ~instrument.utils.metadata
+    ~instrument.utils.stored_dict
+
+.. automodule:: instrument.utils.aps_functions
+.. automodule:: instrument.utils.config_loaders
+.. automodule:: instrument.utils.controls_setup
+.. automodule:: instrument.utils.helper_functions
+.. automodule:: instrument.utils.logging_setup
+.. automodule:: instrument.utils.make_devices_yaml
+.. automodule:: instrument.utils.metadata
+.. automodule:: instrument.utils.stored_dict
+
+
+
+---
+File: /docs/source/guides/dm.md
+---
+
+# Guide: APS Data Management Plans
+
+Provides a few examples of the plans that interact with APS Data Management (DM)
+tools.
+
+## Required
+
+The DM tools rely on the existence of a set of environment variables that define various aspects of the DM system.
+
+## Show any DM jobs still processing
+
+Use the `dm_list_processing_jobs()` plan stub to show DM any workflow jobs that
+are still running or pending.  These are installed by calling
+`aps_dm_setup(DM_SETUP_SCRIPT)` in each session before you call any other DM
+code.
+
+Here, `DM_SETUP_SCRIPT` is the full path to the bash setup shell script provided
+by DM for this account.  The exact path can be different for some installations.
+If unsure, contact the APS DM team for advice.
+
+Note: `aps_dm_setup` is not a bluesky plan stub.  Call it as a standard Python
+function.
+
+Here's an example:
+
+```py
+from instrument.utils.aps_functions import aps_dm_setup
+
+aps_dm_setup("/home/dm/etc/dm.setup.sh")
+```
+
+## Start a new workflow job
+
+The `dm_kickoff_workflow()` plan can be used to start a DM workflow job.  See
+the source code for additional options (such as how often to report progress and
+how to wait for the workflow to finish before the bluesky plan proceeds).
+
+```py
+from instrument.plans.dm_plans import dm_kickoff_workflow
+
+# Use the run with `uid` from the catalog `cat`.
+run = cat[uid]
+
+# Create the dictionary of arguments for the chosen workflow.
+argsDict = {
+    "filePath": "path/to/data/file.mda",  # example
+    "experimentName": "testing-2024-11",  # example
+    "workflowName": "processing",  # existing workflow name
+    # ... any other items required by the workflow
+}
+
+# Start the workflow job from the command line:
+RE(dm_kickoff_workflow(run, argsDict))
+```
+
+In a plan, replace the call to `RE(...)` with `yield from ...`, such as:
+
+```py
+def a_plan():
+    # earlier steps
+    yield from dm_kickoff_workflow(run, argsDict)
+    # later steps
+```
+
+## Start a new workflow job (Low-level)
+
+If the `dm_kickoff_workflow()` plan stub does more than you want, you might consider the `dm_submit_workflow_job()`
+plan stub.  The `dm_submit_workflow_job()` plan stub is
+a thin wrapper around DM's `startProcessingJob()` function.
+The plan stub converts this DM function into a bluesky plan, and reports the DM workflow job `id` once the job has been submitted.
+
+As above, you'll need the `workflowName` and the `argsDict`.
+
+From the command line: `RE(dm_submit_workflow_job(workflowName, argsDict))`
+
+In a plan: `yield from dm_submit_workflow_job(workflowName, argsDict)`
+
+## References
+
+The `apstools`
+[package](https://bcda-aps.github.io/apstools/latest/api/_utils.html#aps-data-management)
+has more support to integrate various capabilities of the DM tools.
+
+For more information about DM, see its [API
+Reference](https://git.aps.anl.gov/DM/dm-docs/-/wikis/DM/Beamline-Services/API-Reference).
+
+
+
+---
+File: /docs/source/guides/index.rst
+---
+
+# Guides, how-tos, ...
+
+Guides show how to use certain features of this instrument.
+
+.. toctree::
+    :maxdepth: 2
+
+    dm
+
+
+
+---
+File: /docs/source/conf.py
+---
+
+"""Configuration file for the Sphinx documentation builder."""
+
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+import instrument
+
+project = "instrument"
+copyright = "2023-2025, APS BCDA"
+author = "APS BCDA"
+version = instrument.__version__
+release = version.split("+")[0]
+if "+" in version:
+    release += "..."
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = """
+    IPython.sphinxext.ipython_console_highlighting
+    IPython.sphinxext.ipython_directive
+    sphinx.ext.autodoc
+    sphinx.ext.autosummary
+    sphinx.ext.coverage
+    sphinx.ext.githubpages
+    sphinx.ext.inheritance_diagram
+    sphinx.ext.mathjax
+    sphinx.ext.todo
+    sphinx.ext.viewcode
+    nbsphinx
+    myst_parser
+""".split()
+myst_enable_extensions = ["colon_fence"]
+
+templates_path = ['_templates']
+source_suffix = ".rst .md".split()
+exclude_patterns = ["**.ipynb_checkpoints"]
+
+today_fmt = "%Y-%m-%d %H:%M"
+
+# Ignore errors in notebooks while documenting them
+nbsphinx_allow_errors = True
+
+# autodoc
+autodoc_default_options = {
+    'members': True,
+    'private-members': True,
+    'member-order': True,
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__',
+    "show-inheritance": True,
+}
+
+
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_theme = 'alabaster'
+html_static_path = ['_static']
+html_title = project
+
+autodoc_mock_imports = """
+    apstools
+    bluesky
+    databroker
+    dm
+    epics
+    guarneri
+    h5py
+    intake
+    matplotlib
+    numpy
+    ophyd
+    ophydregistry
+    pandas
+    pyRestTable
+    pysumreg
+    spec2nexus
+""".split()
+
+
+
+---
+File: /docs/source/console.rst
+---
+
+IPython console
+===============
+
+An IPython console session provides direct interaction with the
+various parts of the bluesky (and other Python) packages and tools.
+
+Start the console session with the environment with your bluesky installation,
+including the `instrument` package you installed.  Here, ``$`` is a bash
+command prompt.  You don't type the command prompt.
+
+.. code-block:: bash
+
+    $ ipython
+    Python 3.12.4 | packaged by Anaconda, Inc. | (main, Jun 18 2024, 15:12:24) [GCC 11.2.0]
+    Type 'copyright', 'credits' or 'license' for more information
+    IPython 8.27.0 -- An enhanced Interactive Python. Type '?' for help.
+
+When ready to load the bluesky data acquisition for use, type this command.
+Note that ``In [1]:`` and ``In [2]:`` are numbered command prompts from IPython.
+
+.. code-block:: ipy
+
+    In [1]: from instrument.startup import *
+    I Mon-12:02:54.126: **************************************** startup
+    I Mon-12:02:54.126: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/logging_setup.py
+    I Mon-12:02:54.126: Log file: /home/prjemian/Documents/projects/prjemian/model_instrument/.logs/logging.log
+    Activating auto-logging. Current session state plus future input saved.
+    Filename       : /home/prjemian/Documents/projects/prjemian/model_instrument/.logs/ipython_log.py
+    Mode           : rotate
+    Output logging : True
+    Raw input log  : False
+    Timestamping   : True
+    State          : active
+    I Mon-12:02:54.127: Console logging: /home/prjemian/Documents/projects/prjemian/model_instrument/.logs/ipython_log.py
+    I Mon-12:02:54.127: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/startup.py
+    I Mon-12:02:54.127: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/aps_functions.py
+    I Mon-12:02:54.444: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/helper_functions.py
+    Exception reporting mode: Minimal
+    I Mon-12:02:54.444: xmode exception level: 'Minimal'
+    W Mon-12:02:54.516: APS DM setup file does not exist: '/home/dm/etc/dm.setup.sh'
+    I Mon-12:02:54.642: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/best_effort_init.py
+    I Mon-12:02:55.245: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/catalog_init.py
+    I Mon-12:02:55.643: Databroker catalog: temp
+    I Mon-12:02:55.644: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/controls_setup.py
+    I Mon-12:02:55.718: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/metadata.py
+    I Mon-12:02:55.718: RunEngine metadata saved in directory: /home/prjemian/.config/Bluesky_RunEngine_md
+    I Mon-12:02:55.718: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/run_engine_init.py
+    I Mon-12:02:55.720: using ophyd control layer: 'pyepics'
+    I Mon-12:02:55.779: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/callbacks/spec_data_file_writer.py
+    I Mon-12:02:55.780: SPEC data file: /home/prjemian/Documents/projects/prjemian/model_instrument/20241014-120255.dat
+    I Mon-12:02:55.813: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/tests/sim_plans.py
+
+    In [2]:
+
+Shortcut
+--------
+
+Here's a shortcut that combines both steps:
+
+.. code-block::
+
+    ipython -i -c "from instrument.startup import *"
+
+
+
+---
+File: /docs/source/demo.ipynb
+---
+
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Demo: Notebook Startup"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "I Thu-17:24:34.649: **************************************** Bluesky Startup Initialized\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "Below are the IPython logging settings for your session.\n",
+      "These settings have no impact on your experiment.\n",
+      "\n",
+      "Activating auto-logging. Current session state plus future input saved.\n",
+      "Filename       : /home/beams1/JEMIAN/Documents/projects/BCDA-APS/bs_model_instrument/docs/source/.logs/ipython_log.py\n",
+      "Mode           : rotate\n",
+      "Output logging : True\n",
+      "Raw input log  : False\n",
+      "Timestamping   : True\n",
+      "State          : active\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "W Thu-17:24:36.071: APS DM setup file does not exist: '/home/dm/etc/dm.setup.sh'\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Exception reporting mode: Minimal\n",
+      "\n",
+      "End of IPython settings\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "I Thu-17:24:40.706: Databroker catalog: temp\n",
+      "I Thu-17:24:41.271: RunEngine metadata saved in directory: /home/beams/JEMIAN/.config/Bluesky_RunEngine_md\n",
+      "I Thu-17:24:41.296: using ophyd control layer: 'pyepics'\n",
+      "I Thu-17:24:42.053: SPEC data file: /home/beams1/JEMIAN/Documents/projects/BCDA-APS/bs_model_instrument/docs/source/20241031-172442.dat\n"
+     ]
+    }
+   ],
+   "source": [
+    "from instrument.startup import *  # noqa"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Run the plans with simulated controls."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "sim_print_plan(): This is a test.\n",
+      "sim_print_plan():  sim_motor.position=0  sim_det.read()=OrderedDict([('noisy_det', {'value': 1.0248434173924217, 'timestamp': 1730413480.6081476})]).\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "()"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "RE(sim_print_plan())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "\n",
+      "Transient Scan ID: 3     Time: 2024-10-31 17:24:42\n",
+      "Persistent Unique Scan ID: '10ad31d3-fda1-4450-8c68-36c8c6808e54'\n",
+      "New stream: 'primary'\n",
+      "+-----------+------------+------------+\n",
+      "|   seq_num |       time |  noisy_det |\n",
+      "+-----------+------------+------------+\n",
+      "|         1 | 17:24:42.3 |   9999.999 |\n",
+      "+-----------+------------+------------+\n",
+      "generator count ['10ad31d3'] (scan num: 3)\n",
+      "\n",
+      "\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "('10ad31d3-fda1-4450-8c68-36c8c6808e54',)"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "RE(sim_count_plan())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "sim_rel_scan_plan(): sim_motor.position=0.\n",
+      "sim_rel_scan_plan(): sim_det.read()=OrderedDict([('noisy_det', {'value': 9999.999278102245, 'timestamp': 1730413482.3491757})]).\n",
+      "sim_rel_scan_plan(): sim_det.read_configuration()=OrderedDict([('noisy_det_Imax', {'value': 10000, 'timestamp': 1730413482.4878476}), ('noisy_det_center', {'value': 0, 'timestamp': 1730413482.489344}), ('noisy_det_sigma', {'value': 1, 'timestamp': 1730413482.4905345}), ('noisy_det_noise', {'value': 'uniform', 'timestamp': 1730413482.4932268}), ('noisy_det_noise_multiplier', {'value': 0.1, 'timestamp': 1730413480.6077008})]).\n",
+      "sim_rel_scan_plan(): sim_det.noise._enum_strs=('none', 'poisson', 'uniform').\n",
+      "\n",
+      "\n",
+      "Transient Scan ID: 4     Time: 2024-10-31 17:24:42\n",
+      "Persistent Unique Scan ID: '7f50cc40-0a89-4c30-9894-c1cf257f0946'\n",
+      "New stream: 'primary'\n",
+      "+-----------+------------+------------+------------+\n",
+      "|   seq_num |       time |      motor |  noisy_det |\n",
+      "+-----------+------------+------------+------------+\n",
+      "|         1 | 17:24:42.5 |     -2.500 |    439.283 |\n",
+      "|         2 | 17:24:42.6 |     -2.000 |   1353.366 |\n",
+      "|         3 | 17:24:42.7 |     -1.500 |   3246.447 |\n",
+      "|         4 | 17:24:42.7 |     -1.000 |   6065.363 |\n",
+      "|         5 | 17:24:42.8 |     -0.500 |   8825.050 |\n",
+      "|         6 | 17:24:42.9 |      0.000 |   9999.999 |\n",
+      "|         7 | 17:24:42.9 |      0.500 |   8824.966 |\n",
+      "|         8 | 17:24:43.0 |      1.000 |   6065.309 |\n",
+      "|         9 | 17:24:43.0 |      1.500 |   3246.490 |\n",
+      "|        10 | 17:24:43.1 |      2.000 |   1353.368 |\n",
+      "|        11 | 17:24:43.1 |      2.500 |    439.322 |\n",
+      "+-----------+------------+------------+------------+\n",
+      "generator rel_scan ['7f50cc40'] (scan num: 4)\n",
+      "\n",
+      "\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "('7f50cc40-0a89-4c30-9894-c1cf257f0946',)"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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",
+      "text/plain": [
+       "<Figure size 500x500 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "RE(sim_rel_scan_plan())"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "bs_model_env",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
+
+
+
+---
+File: /docs/source/index.rst
+---
+
+instrument (|release|)
+======================
+
+Model of a Bluesky Data Acquisition Instrument in console, notebook, & queueserver.
+
+Start the data collection session with the same command, whether in the IPython
+console, a Jupyter notebook, the queueserver, or even a Python script:
+
+.. code-block:: py
+      :linenos:
+
+      from instrument.startup import *
+      from instrument.tests.sim_plans import *
+
+      RE(sim_print_plan())
+      RE(sim_count_plan())
+      RE(sim_rel_scan_plan())
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   demo
+   sessions
+   guides/index
+   install
+   logging_config
+   license
+   api/index
+
+About ...
+-----------
+
+:home: https://BCDA-APS.github.io/bs_model_instrument/
+:bug tracker: https://github.com/BCDA-APS/bs_model_instrument/issues
+:source: https://github.com/BCDA-APS/bs_model_instrument
+:license: :ref:`license`
+:full version: |version|
+:published: |today|
+:reference: :ref:`genindex`, :ref:`modindex`, :ref:`search`
+
+
+
+---
+File: /docs/source/install.rst
+---
+
+.. _install:
+
+Installation
+============
+
+It is easiest to start installation with a fresh ``conda`` environment. [#]_ For
+any packages that require installation of pre-compiled content (such as Qt,
+PyQt, and others), install those packages with ``conda``.  For pure Python code,
+use ``pip`` [#]_ (which will be installed when the conda environment is
+created).
+
+The project comes pre-configured to install the content in the
+``src/instrument`` directory as a package named ``instrument``.  This name can
+be changed (by editing the ``name`` key in the ``pyproject.toml`` file) before
+running the ``pip`` step. If the package is installed under a different name,
+other code (such as ``qserver/qs_host.sh``) will need to be edited to find the new
+package name.
+
+.. note:: All of these commands start with the current working directory set
+    to the base directory of this repository, the one with with
+    ``pyproject.toml`` file and ``src`` directory.
+
+.. [#] https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+.. [#] https://python.land/virtual-environments/installing-packages-with-pip
+
+Install for routine data acquisition
+------------------------------------
+
+These commands create a conda environment and then install all packages required
+by this ``instrument`` package for routine data acquisition.
+
+.. tip:: Replace the text ``model_instrument_env`` with the name you wish to use
+    for this conda environment.
+
+.. code-block:: bash
+    :linenos:
+
+    export INSTALL_ENVIRONMENT_NAME=model_instrument_env
+    conda create -y -n "${INSTALL_ENVIRONMENT_NAME}" python pyqt=5 pyepics
+    conda activate "${INSTALL_ENVIRONMENT_NAME}"
+    pip install -e .
+
+The ``pip install -e .`` command [#]_ means the code will be installed in
+editable mode. You can continue to change the content in the ``src/instrument``
+directory without need to reinstall after each change.
+
+.. [#] https://stackoverflow.com/questions/42609943
+
+Install for development
+-----------------------
+
+For development activities, replace the ``pip`` command above with:
+
+.. code-block:: bash
+
+    pip install -e .[dev]
+
+Install everything
+------------------
+
+For development and other activities, replace the ``pip`` command above with:
+
+.. code-block:: bash
+
+    pip install -e .[all]
+
+.. hint:: For `zsh` shell users,
+.. code-block:: zsh
+
+    pip install -e ."[all]"
+
+
+
+---
+File: /docs/source/license.rst
+---
+
+.. _license:
+
+Software License
+================
+
+.. literalinclude:: ../../src/instrument/LICENSE
+
+
+
+---
+File: /docs/source/logging_config.rst
+---
+
+.. _logging.session:
+.. index:: !logging
+
+===============
+Session logging
+===============
+
+Configure logging for this session.
+
+There are many *loggers* that report messages via the Python ``logging``
+package. A logger could be created by a Python package, module, class, or
+object. The level of detail for each is controlled by the *level* of the logger.
+The level indicates the minimum severity of message to be reported.
+In order of increasing detail: ``critical``, ``error``, ``warning`` (the default
+level), ``info``, ``debug``.
+
+The next table shows some of the many possible loggers. Configure the
+``configs/logging.yml`` file in the ``module_logging_levels`` section, assigning
+one of the logging to each logger to be configured.
+
+.. tip:: If you see too much detail from a logger, set its level to ``warning``
+    or higher severity in the ``configs/logging.yml`` file. See section
+    :ref:`logging.named.levels` for a table of the logging levels.
+
+Here is a list of some of the loggers in which you may be interested (there
+could be others):
+
+==========================  ====================================================
+logger name                 description
+==========================  ====================================================
+``apstools``                logger for messages from the apstools package
+``bluesky``                 logger to which all bluesky log records propagate
+``bluesky.emit_document``   when a Document is emitted. The log record does not contain the full content of the Document.
+``bluesky.RE``              Records from a RunEngine. INFO-level notes state changes. DEBUG-level notes when each message from a plan is about to be processed and when a status object has completed.
+``bluesky.RE.msg``          when each ``Msg`` is about to be processed.
+``bluesky.RE.state``        when the RunEngine’s state changes.
+``databroker``              logger to which all databroker log records propagate
+``ophyd``                   logger to which all ophyd log records propagate
+``ophyd.objects``           records from all devices and signals (that is, OphydObject subclasses)
+``ophyd.control_layer``     requests issued to the underlying control layer (e.g. pyepics, caproto)
+``ophyd.event_dispatcher``  regular summaries of the backlog of updates from the control layer that are being processed on background threads
+==========================  ====================================================
+
+.. _logging.named.levels:
+
+Python logging's named levels
+-----------------------------
+
+Python has six *named* log levels.  The level specifies the minimum severity of
+messages to report. Each named level is assigned a specific integer indicating
+the severity of the log.
+
+This package adds `"BSDEV"` to the list.
+
+=========   =========   ==================================================
+name        severity    comments
+=========   =========   ==================================================
+CRITICAL    50          Examine immediately. **Quietest** level.
+ERROR       40          Something has failed.  [#includes]_
+WARNING     30          Something needs attention.  [#includes]_
+INFO        20          A report that may be of interest.  [#includes]_
+BSDEV       15          A report of interest to developers.  [#includes]_
+DEBUG       10          Diagnostic. **Noisiest** level.  [#includes]_
+NOTSET      0           Initial setting, defaults to WARNING.
+=========   =========   ==================================================
+
+.. [#includes] Includes all above level(s).
+
+.. tip:: Level names used in the ``configs/logging.yml`` file may be
+    upper or lower case.  The code converts them to upper case.
+
+References
+----------
+
+* https://blueskyproject.io/bluesky/main/debugging.html#logger-names
+* https://blueskyproject.io/ophyd/user_v1/reference/logging.html#logger-names
+
+
+
+---
+File: /docs/source/notebook.rst
+---
+
+Jupyter notebook
+================
+
+There are several alternatives to running a notebook.
+An example notebook is provided: :doc:`demo.ipynb <demo>` [#]_
+
+.. [#] download notebook: :download:`demo.ipynb`
+
+Jupyter
+-------
+
+Instructions for running a notebook with Jupyter are on the web [#]_.
+
+.. [#] https://docs.jupyter.org/en/latest/running.html
+
+Once in the web browser, open a new notebook.  Pick the kernel with your bluesky
+installation, including the `instrument` package you installed.
+
+When ready to load the bluesky data acquisition for use, type this in a notebook
+code cell:
+
+.. code-block:: py
+
+    from instrument.startup import *
+
+Jupyter Lab
+-----------
+
+Instructions for starting a JupyterLab server are on the web [#]_.
+
+.. [#] https://jupyterlab.readthedocs.io/en/stable/getting_started/starting.html
+
+Once in the web browser, open a new notebook.  Pick the kernel with your bluesky
+installation, including the `instrument` package you installed.
+
+When ready to load the bluesky data acquisition for use, type this in a notebook
+code cell:
+
+.. code-block:: py
+
+    from instrument.startup import *
+
+VSCode editor
+-------------
+
+The VSCode editor [#]_ has extension packages to run notebooks in the editor.
+See the web for advice on which extensions.  [#]_
+
+.. [#] Microsoft Visual Studio Code Editor
+.. [#] https://www.alphr.com/vs-code-open-jupyter-notebook/
+
+Once the VSCode editor is running (with the jupyter notebook extensions), create
+a new notebook file (name it something such as ``notebook.ipynb``). The
+``.ipynb`` file extension is what informs VSCode to treat it as a notebook.
+Pick the kernel with your bluesky installation, including the `instrument`
+package you installed.
+
+When ready to load the bluesky data acquisition for use, type this in a notebook
+code cell:
+
+.. code-block:: py
+
+    from instrument.startup import *
+
+
+
+---
+File: /docs/source/qserver.rst
+---
+
+.. _qserver:
+
+queueserver
+===========
+
+The bluesky queueserver [#]_ manages sequencing and execution of Bluesky plans.
+It has a host process that manages a RunEngine. Client sessions will interact
+with that host process.  See :ref:`qs.host.configure` for more details.
+
+.. important:: The queueserver requires a ``redis`` service [#]_ to be running.
+    File ``./qserver/qs-config.yml`` has settings to specify the ``redis`` service.
+
+.. [#] https://blueskyproject.io/bluesky-queueserver/
+.. [#] https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-linux/
+
+.. _qs.host:
+
+QS host -- queueserver host process
+-----------------------------------
+
+Use the queueserver host management script.  This option stops the server (if it
+is running) and then starts it.  This is the usual way to (re)start the QS host
+process.
+
+.. code-block:: bash
+
+    ./qserver/qs_host.sh restart
+
+.. _qs.client:
+
+queueserver client GUI
+----------------------
+
+At this time, there is one GUI recommended for use with the bluesky queueserver.
+Other GUI clients are in development and show promise of improvements.  For now,
+use this one.
+
+.. code-block:: bash
+
+    queue-monitor &
+
+.. _qs.host.configure:
+
+Configure the QS Host
+---------------------
+
+File ``qs-config.yml`` [#]_ contains all configuration of the QS host process.
+The source code contains lots of comments about the various settings. See the
+bluesky-queueserver documentation [#]_ for more details of the configuration.
+
+The QS host process writes files into this directory. This directory can be
+relocated. However, it should not be moved into the instrument package since
+that might be installed into a read-only directory.
+
+.. [#] download file: :download:`qs-config.yml <../../qserver/qs-config.yml>`
+.. [#] https://blueskyproject.io/bluesky-queueserver/manager_config.html
+
+shell script ``qs_host.sh``
+---------------------------
+
+A shell script ``qs_host.sh`` [#]_ is used to start the QS host process. Typically,
+it is run in the background: ``./qserver/qs_host.sh restart``. This command looks for
+a running QS host process.  If found, that process is stopped.  Then, a new QS
+host process is started in a *screen* [#]_ session.
+
+.. [#] download file: :download:`qs_host.sh <../../qserver/qs_host.sh>`
+.. [#] https://www.gnu.org/software/screen/manual/screen.html
+
+.. code-block:: bash
+    :linenos:
+
+    (bstest) $ ./qserver/qs_host.sh help
+    Usage: qs_host.sh {start|stop|restart|status|checkup|console|run} [NAME]
+
+        COMMANDS
+            console   attach to process console if process is running in screen
+            checkup   check that process is running, restart if not
+            restart   restart process
+            run       run process in console (not screen)
+            start     start process
+            status    report if process is running
+            stop      stop process
+
+        OPTIONAL TERMS
+            NAME      name of process (default: bluesky_queueserver-)
+
+Alternatively, run the QS host's startup command directly within the ``./qserver/``
+subdirectory.
+
+.. code-block:: bash
+    :linenos:
+
+    cd ./qserver
+    start-re-manager --config=./qs-config.yml
+
+
+
+---
+File: /docs/source/script.rst
+---
+
+Python scripts
+==============
+
+Bluesky data acquisition can be written as Python command programs (scripts).
+This example program shows the RunEngine's metadata.  Save it to a file (perhaps
+named ``example.py``).  Be sure to make the file executable. [#]_
+
+.. code-block:: py
+    :linenos:
+
+    #!/usr/bin/env python
+    from instrument.startup import RE
+
+    print(f"{dict(RE.md)=!r}")
+
+Assuming you named this file ``example.py``, then run it (in the environment
+with your bluesky installation).  Note that ``$`` is a command prompt.  You don't
+type that.
+
+.. code-block:: bash
+    :linenos:
+
+    $ example.py
+    I Mon-12:05:21.749: **************************************** startup
+    I Mon-12:05:21.749: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/logging_setup.py
+    I Mon-12:05:21.749: Log file: /home/prjemian/Documents/projects/prjemian/model_instrument/.logs/logging.log
+    I Mon-12:05:21.898: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/startup.py
+    I Mon-12:05:21.898: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/aps_functions.py
+    I Mon-12:05:22.212: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/helper_functions.py
+    W Mon-12:05:22.284: APS DM setup file does not exist: '/home/dm/etc/dm.setup.sh'
+    I Mon-12:05:22.411: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/best_effort_init.py
+    I Mon-12:05:23.002: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/catalog_init.py
+    I Mon-12:05:23.404: Databroker catalog: temp
+    I Mon-12:05:23.405: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/controls_setup.py
+    I Mon-12:05:23.479: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/utils/metadata.py
+    I Mon-12:05:23.479: RunEngine metadata saved in directory: /home/prjemian/.config/Bluesky_RunEngine_md
+    I Mon-12:05:23.479: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/core/run_engine_init.py
+    I Mon-12:05:23.482: using ophyd control layer: 'pyepics'
+    I Mon-12:05:23.541: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/callbacks/spec_data_file_writer.py
+    I Mon-12:05:23.541: SPEC data file: /home/prjemian/Documents/projects/prjemian/model_instrument/20241014-120523.dat
+    I Mon-12:05:23.574: /home/prjemian/Documents/projects/prjemian/model_instrument/src/instrument/tests/sim_plans.py
+    dict(RE.md)={'scan_id': 70, 'instrument_name': 'Most Glorious Scientific Instrument', 'login_id': 'prjemian@arf.jemian.org', 'conda_prefix': '/home/prjemian/.conda/envs/model_instrument_env', 'versions': {'apstools': '1.7.0', 'bluesky': '1.13', 'databroker': '1.2.5', 'epics': '3.5.7', 'h5py': '3.12.1', 'intake': '0.6.4', 'matplotlib': '3.9.2', 'numpy': '1.26.4', 'ophyd': '1.9.0', 'pyRestTable': '2020.0.10', 'python': '3.12.7', 'pysumreg': '1.0.6', 'spec2nexus': '2021.2.6'}, 'databroker_catalog': 'temp', 'iconfig': {'ICONFIG_VERSION': '2.0.0', 'DATABROKER_CATALOG': 'temp', 'RUN_ENGINE': {'DEFAULT_METADATA': {'beamline_id': 'instrument', 'instrument_name': 'Most Glorious Scientific Instrument', 'proposal_id': 'commissioning', 'databroker_catalog': 'temp'}, 'USE_PROGRESS_BAR': False}, 'AREA_DETECTOR': {'ALLOW_PLUGIN_WARMUP': True, 'BLUESKY_FILES_ROOT': '/path/to/data/', 'IMAGE_DIR': 'sub/directory/path', 'HDF5_FILE_TEMPLATE': '%s%s_%6.6d.h5'}, 'SPEC_DATA_FILES': {'FILE_EXTENSION': 'dat'}, 'DM_SETUP_FILE': '/home/dm/etc/dm.setup.sh', 'OPHYD': {'TIMEOUTS': {'PV_READ': 5, 'PV_WRITE': 5, 'PV_CONNECTION': 5}}, 'XMODE_DEBUG_LEVEL': 'Minimal'}, 'proposal_id': 'commissioning', 'pid': 3865585, 'beamline_id': 'instrument'}
+
+.. note:: The first line is a linux *shebang* [#]_ that tells the
+    linux command processor to start this script with the
+    default ``python`` executable in the current environment.
+
+.. [#] https://linuxhandbook.com/make-file-executable/
+.. [#] https://en.wikipedia.org/wiki/Shebang_(Unix)
+
+
+
+---
+File: /docs/source/sessions.rst
+---
+
+Sessions
+========
+
+Bluesky Data Acquisition sessions can be conducted in various formats, including
+Python scripts, IPython consoles, Jupyter notebooks, and the bluesky
+queueserver.
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Contents:
+
+    console
+    notebook
+    qserver
+    script
+
+
+
+---
+File: /docs/make.bat
+---
+
+@ECHO OFF
+
+pushd %~dp0
+
+REM Command file for Sphinx documentation
+
+if "%SPHINXBUILD%" == "" (
+	set SPHINXBUILD=sphinx-build
+)
+set SOURCEDIR=source
+set BUILDDIR=build
+
+%SPHINXBUILD% >NUL 2>NUL
+if errorlevel 9009 (
+	echo.
+	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
+	echo.installed, then set the SPHINXBUILD environment variable to point
+	echo.to the full path of the 'sphinx-build' executable. Alternatively you
+	echo.may add the Sphinx directory to PATH.
+	echo.
+	echo.If you don't have Sphinx installed, grab it from
+	echo.https://www.sphinx-doc.org/
+	exit /b 1
+)
+
+if "%1" == "" goto help
+
+%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+goto end
+
+:help
+%SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+
+:end
+popd
+
+
+
+---
+File: /docs/Makefile
+---
+
+# Minimal makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line, and also
+# from the environment for the first two.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+SOURCEDIR     = source
+BUILDDIR      = build
+
+# Put it first so that "make" without argument is like "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+.PHONY: help Makefile
+
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+
+
+---
+File: /qserver/qs_host.sh
+---
+
+#!/bin/bash
+# file: qs_host.sh
+# Manage the bluesky queueserver host process.
+# Could be in a screen session or run as a direct process.
+
+SHELL_SCRIPT_NAME=${BASH_SOURCE:-${0}}
+SCRIPT_DIR="$( cd -- "$( dirname -- "${SHELL_SCRIPT_NAME}" )" &> /dev/null && pwd )"
+# CONFIGS_DIR="${SCRIPT_DIR}"/../src/instrument/configs
+command="import pathlib, instrument;"
+command+="print(pathlib.Path(instrument.__file__).parent / 'configs')"
+CONFIGS_DIR=$(python -c "${command}")
+
+###-----------------------------
+### Change program defaults here
+
+# Instrument configuration YAML file with databroker catalog name.
+ICONFIG_YML="${CONFIGS_DIR}"/iconfig.yml
+
+# Bluesky queueserver configuration YAML file.
+# This file contains the definition of 'redis_addr'.  (default: localhost:6379)
+QS_CONFIG_YML="${SCRIPT_DIR}/qs-config.yml"
+
+# Host name (from $hostname) where the queueserver host process runs.
+# QS_HOSTNAME=amber.xray.aps.anl.gov  # if a specific host is required
+QS_HOSTNAME="$(hostname)"
+
+PROCESS=start-re-manager  # from the conda environment
+STARTUP_COMMAND="${PROCESS} --config=${QS_CONFIG_YML}"
+
+#--------------------
+# internal configuration below
+
+# echo "PROCESS=${PROCESS}"
+if [ ! -f $(which "${PROCESS}") ]; then
+    echo "PROCESS '${PROCESS}': file not found. CONDA_PREFIX='${CONDA_PREFIX}'"
+    exit 1
+fi
+
+if [ -z "$STARTUP_DIR" ] ; then
+    # If no startup dir is specified, use the directory with this script
+    STARTUP_DIR="${SCRIPT_DIR}"
+fi
+
+if [ "${DATABROKER_CATALOG}" == "" ]; then
+    if [ -f "${ICONFIG_YML}" ]; then
+        DATABROKER_CATALOG=$(grep DATABROKER_CATALOG "${ICONFIG_YML}" | awk '{print $NF}')
+        # echo "Using catalog ${DATABROKER_CATALOG}"
+    fi
+fi
+DEFAULT_SESSION_NAME="bluesky_queueserver-${DATABROKER_CATALOG}"
+
+#--------------------
+
+SELECTION=${1:-usage}
+SESSION_NAME=${2:-"${DEFAULT_SESSION_NAME}"}
+
+# But other management commands will fail if mismatch
+if [ "$(hostname)" != "${QS_HOSTNAME}" ]; then
+    echo "Must manage queueserver process on ${QS_HOSTNAME}.  This is $(hostname)."
+    exit 1
+fi
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# echo "SESSION_NAME = ${SESSION_NAME}"
+# echo "SHELL_SCRIPT_NAME = ${SHELL_SCRIPT_NAME}"
+# echo "STARTUP_COMMAND = ${STARTUP_COMMAND}"
+# echo "STARTUP_DIR = ${STARTUP_DIR}"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+function checkpid() {
+    # Assume the process is down until proven otherwise
+    PROCESS_DOWN=1
+
+    MY_UID=$(id -u)
+    # The '\$' is needed in the pgrep pattern to select vm7, but not vm7.sh
+    MY_PID=$(ps -u | grep "${PROCESS}")
+    #!echo "MY_PID=${MY_PID}"
+    SCREEN_SESSION="${MY_PID}.${SESSION_NAME}"
+
+    if [ "${MY_PID}" != "" ] ; then
+        SCREEN_PID="${MY_PID}"
+
+        # At least one instance of the process is running;
+        # Find the binary that is associated with this process
+        for pid in ${MY_PID}; do
+            # compare directories
+            BIN_CWD=$(readlink "/proc/${pid}/cwd")
+            START_CWD=$(readlink -f "${STARTUP_DIR}")
+
+            if [ "$BIN_CWD" = "$START_CWD" ] ; then
+                # The process is running with PID=$pid from $STARTUP_DIR
+                P_PID=$(ps -p "${pid}" -o ppid=)
+                # strip leading (and trailing) whitespace
+                arr=($P_PID)
+                P_PID=${arr[0]}
+                SCREEN_SESSION="${P_PID}.${SESSION_NAME}"
+                SCREEN_MATCH=$(screen -ls "${SCREEN_SESSION}" | grep "${SESSION_NAME}")
+                if [ "${SCREEN_MATCH}" != "" ] ; then
+                    # process is running in screen
+                    PROCESS_DOWN=0
+                    MY_PID=${pid}
+                    SCREEN_PID=${P_PID}
+                    break
+                fi
+            fi
+        done
+    else
+        # process is not running
+        PROCESS_DOWN=1
+    fi
+
+    return ${PROCESS_DOWN}
+}
+
+function checkup () {
+    if ! checkpid; then
+        restart
+    fi
+}
+
+function console () {
+    if checkpid; then
+        echo "Connecting to ${SCREEN_SESSION}'s screen session"
+        # The -r flag will only connect if no one is attached to the session
+        #!screen -r "${SESSION_NAME}"
+        # The -x flag will connect even if someone is attached to the session
+        screen -x "${SCREEN_SESSION}"
+    else
+        echo "${SCREEN_NAME} is not running"
+    fi
+}
+
+function exit_if_running() {
+    # ensure that multiple, simultaneous processes are not started by this user ID
+    MY_UID=$(id -u)
+    MY_PID=$(pgrep "${SESSION_NAME}"\$ -u "${MY_UID}")
+
+    if [ "" != "${MY_PID}" ] ; then
+        echo "${SESSION_NAME} is already running (PID=${MY_PID}), won't start a new one"
+        exit 1
+    fi
+}
+
+function restart() {
+    stop
+    start
+}
+
+function run_process() {
+    # only use this for diagnostic purposes
+    exit_if_running
+    cd "${STARTUP_DIR}"
+    ${STARTUP_COMMAND}
+}
+
+function screenpid() {
+    if [ -z "${SCREEN_PID}" ] ; then
+        echo
+    else
+        echo " in a screen session (pid=${SCREEN_PID})"
+    fi
+}
+
+function start() {
+    if checkpid; then
+        echo -n "${SCREEN_SESSION} is already running (pid=${MY_PID})"
+        screenpid
+    else
+        if [ ! -f "${CONDA_EXE}" ]; then
+            echo "No 'conda' command available."
+            exit 1
+        fi
+        echo "Starting ${SESSION_NAME}"
+        cd "${STARTUP_DIR}"
+        # Run SESSION_NAME inside a screen session
+        CMD="screen -DmS ${SESSION_NAME} -h 5000 ${STARTUP_COMMAND}"
+        ${CMD} &
+    fi
+}
+
+function status() {
+    if checkpid; then
+        echo -n "${SCREEN_SESSION} is running (pid=${MY_PID})"
+        screenpid
+    else
+        echo "${SESSION_NAME} is not running"
+    fi
+}
+
+function stop() {
+    if checkpid; then
+        echo "Stopping ${SCREEN_SESSION} (pid=${MY_PID})"
+        kill "${MY_PID}"
+    else
+        echo "${SESSION_NAME} is not running"
+    fi
+}
+
+function usage() {
+    echo "Usage: $(basename "${SHELL_SCRIPT_NAME}") {start|stop|restart|status|checkup|console|run} [NAME]"
+    echo ""
+    echo "    COMMANDS"
+    echo "        console   attach to process console if process is running in screen"
+    echo "        checkup   check that process is running, restart if not"
+    echo "        restart   restart process"
+    echo "        run       run process in console (not screen)"
+    echo "        start     start process"
+    echo "        status    report if process is running"
+    echo "        stop      stop process"
+    echo ""
+    echo "    OPTIONAL TERMS"
+    echo "        NAME      name of process (default: ${DEFAULT_SESSION_NAME})"
+}
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+case ${SELECTION} in
+    start) start ;;
+    stop | kill) stop ;;
+    restart) restart ;;
+    status) status ;;
+    checkup) checkup ;;
+    console) console ;;
+    run) run_process ;;
+    *) usage ;;
+esac
+
+# -----------------------------------------------------------------------------
+# :author:    BCDA
+# :copyright: (c) 2017-2025, UChicago Argonne, LLC
+# The full license is in the file LICENSE, distributed with this software.
+# -----------------------------------------------------------------------------
+
+
+
+---
+File: /qserver/qs-config.yml
+---
+
+# Bluesky-Queueserver start-re-manager configuration
+# use:
+#   queue-monitor &
+#   ./qserver/qs_host.sh start
+#
+#   or
+#   cd ./qserver
+#   start-re-manager --config=./qs-config.yml
+#
+# https://blueskyproject.io/bluesky-queueserver/manager_config.html
+
+network:
+    redis_addr: localhost:6379
+    redis_name_prefix: qs_default
+    zmq_control_addr: tcp://*:60615
+    zmq_info_addr: tcp://*:60625
+    zmq_publish_console: true
+
+operation:
+    # choices: SILENT QUIET NORMAL VERBOSE
+    console_logging_level: NORMAL
+
+    # emergency_lock_key: custom_lock_key
+
+    print_console_output: true
+
+    # choices: NEVER ENVIRONMENT_OPEN ALWAYS
+    update_existing_plans_and_devices: ENVIRONMENT_OPEN
+
+    # choices: NEVER ON_REQUEST ON_STARTUP
+    user_group_permissions_reload: ON_STARTUP
+
+run_engine:
+    # databroker_config: name_of_databroker_config_file
+
+    # kafka_server: 127.0.0.1:9092
+    # kafka_topic: custom_topic_name
+
+    use_persistent_metadata: true
+    zmq_data_proxy_addr: localhost:5567
+
+startup:
+    keep_re: true
+    startup_module: instrument.startup
+    existing_plans_and_devices_path: ./
+    user_group_permissions_path: ./
+
+worker:
+    use_ipython_kernel: true
+    # ipython_kernel_ip: auto
+    ipython_matplotlib: qt5
+
+
+
+---
+File: /qserver/user_group_permissions.yaml
+---
+
+user_groups:
+  root:  # The group includes all available plan and devices
+    allowed_plans:
+      - null  # Allow all
+    forbidden_plans:
+      - ":^_"  # All plans with names starting with '_'
+    allowed_devices:
+      - null  # Allow all
+    forbidden_devices:
+      - ":^_:?.*"  # All devices with names starting with '_'
+    allowed_functions:
+      - null  # Allow all
+    forbidden_functions:
+      - ":^_"  # All functions with names starting with '_'
+  primary:  # The group includes beamline staff, includes all or most of the plans and devices
+    allowed_plans:
+      - ":.*"  # Different way to allow all plans.
+    forbidden_plans:
+      - null  # Nothing is forbidden
+    allowed_devices:
+      - ":?.*:depth=5"  # Allow all device and subdevices. Maximum deepth for subdevices is 5.
+    forbidden_devices:
+      - null  # Nothing is forbidden
+    allowed_functions:
+      - "function_sleep"  # Explicitly listed name
+  test_user:  # Users with limited access capabilities
+    allowed_plans:
+      - ":^count"  # Use regular expression patterns
+      - ":scan$"
+    forbidden_plans:
+      - ":^adaptive_scan$" # Use regular expression patterns
+      - ":^inner_product"
+    allowed_devices:
+      - ":^det:?.*"  # Use regular expression patterns
+      - ":^motor:?.*"
+      - ":^sim_bundle_A:?.*"
+    forbidden_devices:
+      - ":^det[3-5]$:?.*" # Use regular expression patterns
+      - ":^motor\\d+$:?.*"
+    allowed_functions:
+      - ":element$"
+      - ":elements$"
+      - "function_sleep"
+      - "clear_buffer"
+    forbidden_functions:
+      - ":^_"  # All functions with names starting with '_'
+
+
+
+---
+File: /src/instrument/beamline/__init__.py
+---
+
+"""
+Custom folder to store all beamline specific implementations
+"""
+
+
+
+---
+File: /src/instrument/callbacks/__init__.py
+---
+
+"""RunEngine callbacks, mostly."""
+
+
+
+---
+File: /src/instrument/callbacks/nexus_data_file_writer.py
+---
+
+"""
+
+NeXus Writer
+============
+
+Write scan(s) to a NeXus/HDF5 file.
+
+.. autosummary::
+    :nosignatures:
+
+    ~MyNXWriter
+    ~nxwriter
+"""
+
+import logging
+
+from ..core.run_engine_init import RE
+from ..utils.aps_functions import host_on_aps_subnet
+from ..utils.config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+if host_on_aps_subnet():
+    from apstools.callbacks import NXWriterAPS as NXWriter
+else:
+    from apstools.callbacks import NXWriter
+
+
+class MyNXWriter(NXWriter):
+    """Patch to get sample title from metadata, if available."""
+
+    def get_sample_title(self):
+        """
+        Get the title from the metadata or modify the default.
+
+        default title: S{scan_id}-{plan_name}-{short_uid}
+        """
+        try:
+            title = self.metadata["title"]
+        except KeyError:
+            # title = super().get_sample_title()  # the default title
+            title = f"S{self.scan_id:05d}-{self.plan_name}-{self.uid[:7]}"
+        return title
+
+
+nxwriter = MyNXWriter()  # create the callback instance
+"""The NeXus file writer object."""
+
+if "NEXUS_DATA_FILES" in iconfig:
+    RE.subscribe(nxwriter.receiver)  # write data to NeXus files
+
+nxwriter.file_extension = iconfig.get("FILE_EXTENSION", "hdf")
+warn_missing = iconfig.get("WARN_MISSING", False)
+nxwriter.warn_on_missing_content = warn_missing
+
+
+
+---
+File: /src/instrument/callbacks/spec_data_file_writer.py
+---
+
+"""
+custom callbacks
+================
+
+.. autosummary::
+    :nosignatures:
+
+    ~newSpecFile
+    ~spec_comment
+    ~specwriter
+"""
+
+import datetime
+import logging
+import pathlib
+
+import apstools.callbacks
+import apstools.utils
+
+from ..core.run_engine_init import RE
+from ..utils.config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+DEFAULT_FILE_EXTENSION = "dat"
+file_extension = iconfig.get("FILE_EXTENSION", DEFAULT_FILE_EXTENSION)
+
+
+def spec_comment(comment, doc=None):
+    """Make it easy for user to add comments to the data file."""
+    apstools.callbacks.spec_comment(comment, doc, specwriter)
+
+
+def newSpecFile(title, scan_id=None, RE=None):
+    """
+    User choice of the SPEC file name.
+
+    Cleans up title, prepends month and day and appends file extension.
+    If ``RE`` is passed, then resets ``RE.md["scan_id"] = scan_id``.
+
+    If the SPEC file already exists, then ``scan_id`` is ignored and
+    ``RE.md["scan_id"]`` is set to the last scan number in the file.
+    """
+    kwargs = {}
+    if RE is not None:
+        kwargs["RE"] = RE
+
+    mmdd = str(datetime.datetime.now()).split()[0][5:].replace("-", "_")
+    clean = apstools.utils.cleanupText(title)
+    fname = pathlib.Path(f"{mmdd}_{clean}.{file_extension}")
+    if fname.exists():
+        logger.warning(f">>> file already exists: {fname} <<<")
+        handled = "appended"
+    else:
+        kwargs["scan_id"] = scan_id or 1
+        handled = "created"
+
+    specwriter.newfile(fname, **kwargs)
+
+    logger.info(f"SPEC file name : {specwriter.spec_filename}")
+    logger.info(f"File will be {handled} at end of next bluesky scan.")
+
+
+# write scans to SPEC data file
+try:
+    # apstools >=1.6.21
+    _specwriter = apstools.callbacks.SpecWriterCallback2()
+except AttributeError:
+    # apstools <1.6.21
+    _specwriter = apstools.callbacks.SpecWriterCallback()
+
+specwriter = _specwriter
+"""The SPEC file writer object."""
+
+# make the SPEC file in current working directory (assumes is writable)
+specwriter.newfile(specwriter.spec_filename)
+
+if "SPEC_DATA_FILES" in iconfig:
+    RE.subscribe(specwriter.receiver)  # write data to SPEC files
+    logger.info("SPEC data file: %s", specwriter.spec_filename.resolve())
+
+try:
+    # feature new in apstools 1.6.14
+    from apstools.plans import label_stream_wrapper
+
+    def motor_start_preprocessor(plan):
+        """Record motor positions at start of each run."""
+        return label_stream_wrapper(plan, "motor", when="start")
+
+    RE.preprocessors.append(motor_start_preprocessor)
+except Exception:
+    logger.warning("Could load support to log motors positions.")
+
+
+
+---
+File: /src/instrument/configs/__init__.py
+---
+
+"""Configs required to set up user package"""
+
+
+
+---
+File: /src/instrument/configs/devices_aps_only.yml
+---
+
+# Guarneri-style device YAML configuration
+
+# Objects only available at APS
+
+apstools.devices.ApsMachineParametersDevice:
+  - name: aps
+
+
+
+---
+File: /src/instrument/configs/devices.yml
+---
+
+# Guarneri-style device YAML configuration
+
+apstools.devices.SimulatedApsPssShutterWithStatus:
+- name: shutter
+  labels: ["shutters"]
+
+# ophyd.Signal:
+# - name: test
+#   value: 50.7
+# - name: t2
+#   value: 2
+
+# apstools.synApps.Optics2Slit2D_HV:
+# - name: slit1
+#   prefix: ioc:Slit1
+#   labels: ["slits"]
+
+# hkl.SimulatedE4CV:
+# - name: sim4c
+#   prefix: ""
+#   labels: ["diffractometer"]
+
+# ophyd.scaler.ScalerCH:
+# - name: scaler1
+#   prefix: vme:scaler1
+#   labels: ["scalers", "detectors"]
+
+# ophyd.EpicsMotor:
+# - {name: m1, prefix: gp:m1, labels: ["motor"]}
+# - {name: m2, prefix: gp:m2, labels: ["motor"]}
+# - {name: m3, prefix: gp:m3, labels: ["motor"]}
+# - {name: m4, prefix: gp:m4, labels: ["motor"]}
+
+
+
+---
+File: /src/instrument/configs/iconfig.yml
+---
+
+# Configuration for the Bluesky instrument package.
+
+# identify the version of this iconfig.yml file
+ICONFIG_VERSION: 2.0.0
+
+# Add additional configuration for use with your instrument.
+
+### The short name for the databroker catalog.
+DATABROKER_CATALOG: &databroker_catalog temp
+
+### RunEngine configuration
+RUN_ENGINE:
+    DEFAULT_METADATA:
+        beamline_id: instrument
+        instrument_name: Most Glorious Scientific Instrument
+        proposal_id: commissioning
+        databroker_catalog: *databroker_catalog
+
+    ### EPICS PV to use for the `scan_id`.
+    ### Default: `RE.md["scan_id"]` (not using an EPICS PV)
+    # SCAN_ID_PV: f"{IOC}bluesky_scan_id"
+
+    ### Where to "autosave" the RE.md dictionary.
+    ### Defaults:
+    MD_STORAGE_HANDLER: StoredDict
+    MD_PATH: .re_md_dict.yml
+
+    ### The progress bar is nice to see,
+    ### except when it clutters the output in Jupyter notebooks.
+    ### Default: True
+    USE_PROGRESS_BAR: false
+
+# Command-line tools, such as %wa, %ct, ...
+USE_BLUESKY_MAGICS: True
+
+### Best Effort Callback Configurations
+### Defaults: all true (except no plots in queueserver)
+# BEC:
+#     BASELINE: false
+#     HEADING: false
+#     PLOTS: false
+#     TABLE: false
+
+AREA_DETECTOR:
+    ### General configuration for area detectors.
+    ALLOW_PLUGIN_WARMUP: true
+    BLUESKY_FILES_ROOT: &BLUESKY_DATA_ROOT "/path/to/data/"
+    IMAGE_DIR: "sub/directory/path"
+    HDF5_FILE_TEMPLATE: "%s%s_%6.6d.h5"
+    ### Add configuration for specific detector(s).
+    ### Suggestion:
+    # ADSIM_16M:
+    #     # IOC host: workstation_name
+    #     IOC_FILES_ROOT: *BLUESKY_DATA_ROOT
+    #     NAME: simdet16M
+    #     PV_PREFIX: "simdet16m:"
+
+### Support for known output file formats.
+### Uncomment to use.  If undefined, will not write that type of file.
+### Each callback should apply its configuration from here.
+# NEXUS_DATA_FILES:
+#     FILE_EXTENSION: hdf
+#     WARN_MISSING_CONTENT: true
+SPEC_DATA_FILES:
+    FILE_EXTENSION: dat
+
+### APS Data Management
+### Use bash shell, deactivate all conda environments, source this file:
+DM_SETUP_FILE: "/home/dm/etc/dm.setup.sh"
+
+### Local OPHYD Device Control Yaml
+DEVICES_FILE: devices.yml
+APS_DEVICES_FILE: devices_aps_only.yml
+
+# ----------------------------------
+
+OPHYD:
+    ### Control layer for ophyd to communicate with EPICS.
+    ### Default: PyEpics
+    ### Choices: "PyEpics" or "caproto"
+    # CONTROL_LAYER: caproto
+
+    ### default timeouts (seconds)
+    TIMEOUTS:
+        PV_READ: &TIMEOUT 5
+        PV_WRITE: *TIMEOUT
+        PV_CONNECTION: *TIMEOUT
+
+# Control detail of exception traces in IPython (console and notebook).
+XMODE_DEBUG_LEVEL: Minimal
+
+
+
+---
+File: /src/instrument/configs/logging.yml
+---
+
+# Bluesky Session Logging Configuration
+
+console_logs:
+  date_format: "%a-%H:%M:%S"
+  log_format: "%(levelname)-.1s %(asctime)s.%(msecs)03d: %(message)s"
+  level: info
+  root_level: bsdev
+
+file_logs:
+  date_format: "%Y-%m-%d %H:%M:%S"
+  log_directory: .logs
+  log_filename_base: logging.log
+  log_format: "|\
+    %(asctime)s.%(msecs)03d|\
+    %(levelname)s|\
+    %(process)d|\
+    %(name)s|\
+    %(module)s|\
+    %(lineno)d|\
+    %(threadName)s| - \
+    %(message)s"
+  maxBytes: 1_000_000
+  backupCount: 9
+  level: info
+  rotate_on_startup: true
+
+ipython_logs:
+  log_directory: .logs
+  log_filename_base: ipython_log.py
+  log_mode: rotate
+  options: -o -t
+
+modules:
+  apstools: warning
+  bluesky-queueserver: warning
+  bluesky: warning
+  bluesky.RE: warning
+  caproto: warning
+  databroker: warning
+  instrument: bsdev
+  ophyd: warning
+
+
+
+---
+File: /src/instrument/core/__init__.py
+---
+
+"""
+Utility support to start bluesky sessions.
+
+Also contains setup code that MUST run before other code in this directory.
+"""
+
+from ..utils.aps_functions import aps_dm_setup
+from ..utils.config_loaders import iconfig
+from ..utils.helper_functions import debug_python
+from ..utils.helper_functions import mpl_setup
+
+debug_python()
+mpl_setup()
+aps_dm_setup(iconfig.get("DM_SETUP_FILE"))
+
+
+
+---
+File: /src/instrument/core/best_effort_init.py
+---
+
+"""
+BestEffortCallback: simple real-time visualizations, provides ``bec``.
+======================================================================
+
+.. autosummary::
+    ~bec
+    ~peaks
+"""
+
+import logging
+
+from bluesky.callbacks.best_effort import BestEffortCallback
+
+from ..utils.config_loaders import iconfig
+from ..utils.helper_functions import running_in_queueserver
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+bec = BestEffortCallback()
+"""BestEffortCallback object, creates live tables and plots."""
+
+bec_config = iconfig.get("BEC", {})
+
+if not bec_config.get("BASELINE", True):
+    bec.disable_baseline()
+
+if not bec_config.get("HEADING", True):
+    bec.disable_heading()
+
+if not bec_config.get("PLOTS", True) or running_in_queueserver():
+    bec.disable_plots()
+
+if not bec_config.get("TABLE", True):
+    bec.disable_table()
+
+peaks = bec.peaks
+"""Dictionary with statistical analysis of LivePlots."""
+
+
+
+---
+File: /src/instrument/core/catalog_init.py
+---
+
+"""
+Databroker catalog, provides ``cat``
+====================================
+
+.. autosummary::
+    ~cat
+"""
+
+import logging
+
+import databroker
+
+from ..utils.config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+TEMPORARY_CATALOG_NAME = "temp"
+
+catalog_name = iconfig.get("DATABROKER_CATALOG", TEMPORARY_CATALOG_NAME)
+if catalog_name == TEMPORARY_CATALOG_NAME:
+    _cat = databroker.temp().v2
+else:
+    _cat = databroker.catalog[catalog_name].v2
+
+cat = _cat
+"""Databroker catalog object, receives new data from ``RE``."""
+
+logger.info("Databroker catalog: %s", cat.name)
+
+
+
+---
+File: /src/instrument/core/run_engine_init.py
+---
+
+"""
+Setup the Bluesky RunEngine, provides ``RE`` and ``sd``.
+========================================================
+
+.. autosummary::
+    ~RE
+    ~sd
+"""
+
+import logging
+
+import bluesky
+from bluesky.utils import ProgressBarManager
+
+from ..utils.config_loaders import iconfig
+from ..utils.controls_setup import connect_scan_id_pv
+from ..utils.controls_setup import set_control_layer
+from ..utils.controls_setup import set_timeouts
+from ..utils.metadata import MD_PATH
+from ..utils.metadata import re_metadata
+from ..utils.stored_dict import StoredDict
+from .best_effort_init import bec
+from .catalog_init import cat
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+re_config = iconfig.get("RUN_ENGINE", {})
+
+RE = bluesky.RunEngine()
+"""The bluesky RunEngine object."""
+
+# Save/restore RE.md dictionary, in this precise order.
+if MD_PATH is not None:
+    handler_name = re_config.get("MD_STORAGE_HANDLER", "StoredDict")
+    logger.debug(
+        "Select %r to store 'RE.md' dictionary in %s.",
+        handler_name,
+        MD_PATH,
+    )
+    try:
+        if handler_name == "PersistentDict":
+            RE.md = bluesky.utils.PersistentDict(MD_PATH)
+        else:
+            RE.md = StoredDict(MD_PATH)
+    except Exception as error:
+        print(
+            "\n"
+            f"Could not create {handler_name} for RE metadata. Continuing"
+            f" without saving metadata to disk. {error=}\n"
+        )
+        logger.warning("%s('%s') error:%s", handler_name, MD_PATH, error)
+
+RE.md.update(re_metadata(cat))  # programmatic metadata
+RE.md.update(re_config.get("DEFAULT_METADATA", {}))
+
+sd = bluesky.SupplementalData()
+"""Baselines & monitors for ``RE``."""
+
+RE.subscribe(cat.v1.insert)
+RE.subscribe(bec)
+RE.preprocessors.append(sd)
+
+set_control_layer()
+set_timeouts()  # MUST happen before ANY EpicsSignalBase (or subclass) is created.
+
+connect_scan_id_pv(RE)  # if configured
+
+if re_config.get("USE_PROGRESS_BAR", True):
+    # Add a progress bar.
+    pbar_manager = ProgressBarManager()
+    RE.waiting_hook = pbar_manager
+
+
+
+---
+File: /src/instrument/devices/__init__.py
+---
+
+"""Ophyd-style devices."""
+
+from ophyd.sim import motor as sim_motor  # noqa: F401
+from ophyd.sim import noisy_det as sim_det  # noqa: F401
+
+
+
+---
+File: /src/instrument/plans/__init__.py
+---
+
+"""Bluesky plans."""
+
+from .dm_plans import dm_kickoff_workflow  # noqa: F401
+from .dm_plans import dm_list_processing_jobs  # noqa: F401
+from .dm_plans import dm_submit_workflow_job  # noqa: F401
+from .sim_plans import sim_count_plan  # noqa: F401
+from .sim_plans import sim_print_plan  # noqa: F401
+from .sim_plans import sim_rel_scan_plan  # noqa: F401
+
+
+
+---
+File: /src/instrument/plans/dm_plans.py
+---
+
+"""
+Plans in support of APS Data Management
+=======================================
+
+.. autosummary::
+
+    ~dm_kickoff_workflow
+    ~dm_list_processing_jobs
+    ~dm_submit_workflow_job
+"""
+
+import logging
+
+from apstools.devices import DM_WorkflowConnector
+from apstools.utils import dm_api_proc
+from apstools.utils import share_bluesky_metadata_with_dm
+from bluesky import plan_stubs as bps
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+def dm_kickoff_workflow(run, argsDict, timeout=None, wait=False):
+    """
+    Start a DM workflow for this bluesky run and share run's metadata with DM.
+
+    PARAMETERS:
+
+    run (*obj*): Bluesky run object (such as 'run = cat[uid]').
+
+    argsDict (*dict*): Dictionary of parameters needed by 'workflowName'.
+        At minimum, most workflows expect these keys: 'filePath' and
+        'experimentName'.  Consult the workflow for the expected
+        content of 'argsDict'.
+
+    timeout (*number*): When should bluesky stop reporting on this
+        DM workflow job (if it has not ended). Units are seconds.
+        Default is forever.
+
+    wait (*bool*): Should this plan stub wait for the job to end?
+        Default is 'False'.
+    """
+    dm_workflow = DM_WorkflowConnector(name="dm_workflow")
+
+    if timeout is None:
+        # Disable periodic reports, use a long time (s).
+        timeout = 999_999_999_999
+
+    yield from bps.mv(dm_workflow.concise_reporting, True)
+    yield from bps.mv(dm_workflow.reporting_period, timeout)
+
+    workflow_name = argsDict.pop["workflowName"]
+    yield from dm_workflow.run_as_plan(
+        workflow=workflow_name,
+        wait=wait,
+        timeout=timeout,
+        **argsDict,
+    )
+
+    # Upload bluesky run metadata to APS DM.
+    share_bluesky_metadata_with_dm(argsDict["experimentName"], workflow_name, run)
+
+    # Users requested the DM workflow job ID be printed to the console.
+    dm_workflow._update_processing_data()
+    job_id = dm_workflow.job_id.get()
+    job_stage = dm_workflow.stage_id.get()
+    job_status = dm_workflow.status.get()
+    print(f"DM workflow id: {job_id!r}  status: {job_status}  stage: {job_stage}")
+
+
+def dm_list_processing_jobs(exclude=None):
+    """
+    Show all the DM jobs with status not excluded.
+
+    Excluded status (default): 'done', 'failed'
+    """
+    yield from bps.null()  # make this a plan stub
+    api = dm_api_proc()
+    if exclude is None:
+        exclude = ("done", "failed")
+
+    for j in api.listProcessingJobs():
+        if j["status"] not in exclude:
+            print(
+                f"id={j['id']!r}"
+                f"  submitted={j.get('submissionTimestamp')}"
+                f"  status={j['status']!r}"
+            )
+
+
+def dm_submit_workflow_job(workflowName, argsDict):
+    """
+    Low-level plan stub to submit a job to a DM workflow.
+
+    It is recommended to use dm_kickoff_workflow() instead.
+    This plan does not share run metadata with DM.
+
+    PARAMETERS:
+
+    workflowName (*str*): Name of the DM workflow to be run.
+
+    argsDict (*dict*): Dictionary of parameters needed by 'workflowName'.
+        At minimum, most workflows expect these keys: 'filePath' and
+        'experimentName'.  Consult the workflow for the expected
+        content of 'argsDict'.
+    """
+    yield from bps.null()  # make this a plan stub
+    api = dm_api_proc()
+
+    job = api.startProcessingJob(api.username, workflowName, argsDict)
+    print(f"workflow={workflowName!r}  id={job['id']!r}")
+
+
+
+---
+File: /src/instrument/plans/sim_plans.py
+---
+
+"""
+Simulators from ophyd
+=====================
+
+For development and testing only, provides plans.
+
+.. autosummary::
+    ~sim_count_plan
+    ~sim_print_plan
+    ~sim_rel_scan_plan
+"""
+
+import logging
+
+from bluesky import plan_stubs as bps
+from bluesky import plans as bp
+
+from ..devices import sim_det
+from ..devices import sim_motor
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+DEFAULT_MD = {"title": "test run with simulator(s)"}
+
+
+def sim_count_plan(num: int = 1, imax: float = 10_000, md: dict = DEFAULT_MD):
+    """Demonstrate the ``count()`` plan."""
+    logger.debug("sim_count_plan()")
+    yield from bps.mv(sim_det.Imax, imax)
+    yield from bp.count([sim_det], num=num, md=md)
+
+
+def sim_print_plan():
+    """Demonstrate a ``print()`` plan stub (no data streams)."""
+    logger.debug("sim_print_plan()")
+    yield from bps.null()
+    print("sim_print_plan(): This is a test.")
+    print(f"sim_print_plan():  {sim_motor.position=}  {sim_det.read()=}.")
+
+
+def sim_rel_scan_plan(
+    span: float = 5,
+    num: int = 11,
+    imax: float = 10_000,
+    center: float = 0,
+    sigma: float = 1,
+    noise: str = "uniform",  # none poisson uniform
+    md: dict = DEFAULT_MD,
+):
+    """Demonstrate the ``rel_scan()`` plan."""
+    logger.debug("sim_rel_scan_plan()")
+    # fmt: off
+    yield from bps.mv(
+        sim_det.Imax, imax,
+        sim_det.center, center,
+        sim_det.sigma, sigma,
+        sim_det.noise, noise,
+    )
+    # fmt: on
+    print(f"sim_rel_scan_plan(): {sim_motor.position=}.")
+    print(f"sim_rel_scan_plan(): {sim_det.read()=}.")
+    print(f"sim_rel_scan_plan(): {sim_det.read_configuration()=}.")
+    print(f"sim_rel_scan_plan(): {sim_det.noise._enum_strs=}.")
+    yield from bp.rel_scan([sim_det], sim_motor, -span / 2, span / 2, num=num, md=md)
+
+
+
+---
+File: /src/instrument/tests/__init__.py
+---
+
+"""Test code for minimal instrument package."""
+
+
+
+---
+File: /src/instrument/tests/test_general.py
+---
+
+"""
+Test that instrument can be started.
+
+Here is just enough testing to get a CI workflow started. More are possible.
+"""
+
+import pytest
+
+from ..plans.sim_plans import sim_count_plan
+from ..plans.sim_plans import sim_print_plan
+from ..plans.sim_plans import sim_rel_scan_plan
+from ..startup import RE
+from ..startup import bec
+from ..startup import cat
+from ..startup import iconfig
+from ..startup import peaks
+from ..startup import running_in_queueserver
+from ..startup import sd
+from ..startup import specwriter
+
+
+def test_startup():
+    """Test that standard startup works."""
+    assert cat is not None
+    assert bec is not None
+    assert peaks is not None
+    assert sd is not None
+    assert iconfig is not None
+    assert RE is not None
+    assert specwriter is not None
+    if iconfig.get("DATABROKER_CATALOG", "temp") == "temp":
+        assert len(cat) == 0
+    assert not running_in_queueserver()
+
+
+@pytest.mark.parametrize(
+    "plan, n_uids",
+    [
+        [sim_print_plan, 0],
+        [sim_count_plan, 1],
+        [sim_rel_scan_plan, 1],
+    ],
+)
+def test_sim_plans(plan, n_uids):
+    """Test supplied simulator plans."""
+    bec.disable_plots()
+    n_runs = len(cat)
+    uids = RE(plan())
+    assert len(uids) == n_uids
+    assert len(cat) == n_runs + len(uids)
+
+
+def test_iconfig():
+    """Test the instrument configuration."""
+    version = iconfig.get("ICONFIG_VERSION", "0.0.0")
+    assert version >= "2.0.0"
+
+    cat_name = iconfig.get("DATABROKER_CATALOG")
+    assert cat_name is not None
+    assert cat_name == cat.name
+
+    assert "RUN_ENGINE" in iconfig
+    assert "DEFAULT_METADATA" in iconfig["RUN_ENGINE"]
+
+    default_md = iconfig["RUN_ENGINE"]["DEFAULT_METADATA"]
+    assert "beamline_id" in default_md
+    assert "instrument_name" in default_md
+    assert "proposal_id" in default_md
+    assert "databroker_catalog" in default_md
+    assert default_md["databroker_catalog"] == cat.name
+
+    xmode = iconfig.get("XMODE_DEBUG_LEVEL")
+    assert xmode is not None
+
+
+
+---
+File: /src/instrument/tests/test_stored_dict.py
+---
+
+"""
+Test the utils.stored_dict module.
+"""
+
+import pathlib
+import tempfile
+import time
+from contextlib import nullcontext as does_not_raise
+
+import pytest
+
+from ..utils.config_loaders import load_config_yaml
+from ..utils.stored_dict import StoredDict
+
+
+def luftpause(delay=0.05):
+    """A brief wait for content to flush to storage."""
+    time.sleep(max(0, delay))
+
+
+@pytest.fixture
+def md_file():
+    """Provide a temporary file (deleted on close)."""
+    tfile = tempfile.NamedTemporaryFile(
+        prefix="re_md_",
+        suffix=".yml",
+        delete=False,
+    )
+    path = pathlib.Path(tfile.name)
+    yield pathlib.Path(tfile.name)
+
+    if path.exists():
+        path.unlink()  # delete the file
+
+
+def test_StoredDict(md_file):
+    """Test the StoredDict class."""
+    assert md_file.exists()
+    assert len(open(md_file).read().splitlines()) == 0  # empty
+
+    sdict = StoredDict(md_file, delay=0.2, title="unit testing")
+    assert sdict is not None
+    assert len(sdict) == 0
+    assert sdict._delay == 0.2
+    assert sdict._title == "unit testing"
+    assert len(open(md_file).read().splitlines()) == 0  # still empty
+    assert sdict._sync_key == f"sync_agent_{id(sdict):x}"
+    assert not sdict.sync_in_progress
+
+    # Write an empty dictionary.
+    sdict.flush()
+    luftpause()
+    buf = open(md_file).read().splitlines()
+    assert len(buf) == 4, f"{buf=}"
+    assert buf[-1] == "{}"  # The empty dict.
+    assert buf[0].startswith("# ")
+    assert buf[1].startswith("# ")
+    assert "unit testing" in buf[0]
+
+    # Add a new {key: value} pair.
+    assert not sdict.sync_in_progress
+    sdict["a"] = 1
+    assert sdict.sync_in_progress
+    sdict.flush()
+    assert time.time() > sdict._sync_deadline
+    luftpause()
+    assert not sdict.sync_in_progress
+    assert len(open(md_file).read().splitlines()) == 4
+
+    # Change the only value.
+    sdict["a"] = 2
+    sdict.flush()
+    luftpause()
+    assert len(open(md_file).read().splitlines()) == 4  # Still.
+
+    # Add another key.
+    sdict["bee"] = "bumble"
+    sdict.flush()
+    luftpause()
+    assert len(open(md_file).read().splitlines()) == 5
+
+    # Test _delayed_sync_to_storage.
+    sdict["bee"] = "queen"
+    md = load_config_yaml(md_file)
+    assert len(md) == 2  # a & bee
+    assert "a" in md
+    assert md["bee"] == "bumble"  # The old value.
+
+    time.sleep(sdict._delay / 2)
+    # Still not written ...
+    assert load_config_yaml(md_file)["bee"] == "bumble"
+
+    time.sleep(sdict._delay)
+    # Should be written by now.
+    assert load_config_yaml(md_file)["bee"] == "queen"
+
+    del sdict["bee"]  # __delitem__
+    assert "bee" not in sdict  # __getitem__
+
+
+@pytest.mark.parametrize(
+    "md, xcept, text",
+    [
+        [{"a": 1}, None, str(None)],  # int value is ok
+        [{"a": 2.2}, None, str(None)],  # float value is ok
+        [{"a": "3"}, None, str(None)],  # str value is ok
+        [{"a": [4, 5, 6]}, None, str(None)],  # list value is ok
+        [{"a": {"bb": [4, 5, 6]}}, None, str(None)],  # nested value is ok
+        [{1: 1}, None, str(None)],  # int key is ok
+        [{"a": object()}, TypeError, "not JSON serializable"],
+        [{object(): 1}, TypeError, "keys must be str, int, float, "],
+        [{"a": [4, object(), 6]}, TypeError, "not JSON serializable"],
+        [{"a": {object(): [4, 5, 6]}}, TypeError, "keys must be str, int, "],
+    ],
+)
+def test_set_exceptions(md, xcept, text, md_file):
+    """Cases that might raise an exception."""
+    sdict = StoredDict(md_file, delay=0.2, title="unit testing")
+    context = does_not_raise() if xcept is None else pytest.raises(xcept)
+    with context as reason:
+        sdict.update(md)
+    assert text in str(reason), f"{reason=}"
+
+
+def test_popitem(md_file):
+    """Can't popitem from empty dict."""
+    sdict = StoredDict(md_file, delay=0.2, title="unit testing")
+    with pytest.raises(KeyError) as reason:
+        sdict.popitem()
+    assert "dictionary is empty" in str(reason), f"{reason=}"
+
+
+def test_repr(md_file):
+    """__repr__"""
+    sdict = StoredDict(md_file, delay=0.1, title="unit testing")
+    sdict["a"] = 1
+    assert repr(sdict) == "<StoredDict {'a': 1}>"
+    assert str(sdict) == "<StoredDict {'a': 1}>"
+
+
+
+---
+File: /src/instrument/utils/__init__.py
+---
+
+"""Local utilties and miscellaneous code."""
+
+
+
+---
+File: /src/instrument/utils/aps_functions.py
+---
+
+"""
+APS utility helper functions
+============================
+
+.. autosummary::
+    ~host_on_aps_subnet
+    ~aps_dm_setup
+"""
+
+import logging
+import os
+import pathlib
+import socket
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+def aps_dm_setup(dm_setup_file):
+    """
+    APS Data Management setup
+    =========================
+
+    Read the bash shell script file used by DM to setup the environment. Parse any
+    ``export`` lines and add their environment variables to this session.  This is
+    done by brute force here since the APS DM environment setup requires different
+    Python code than bluesky and the two often clash.
+
+    This setup must be done before any of the DM package libraries are called.
+
+    """
+    if dm_setup_file is not None:
+        bash_script = pathlib.Path(dm_setup_file)
+        if bash_script.exists():
+            logger.info("APS DM environment file: %s", str(bash_script))
+            # parse environment variables from bash script
+            environment = {}
+            for line in open(bash_script).readlines():
+                if not line.startswith("export "):
+                    continue
+                k, v = line.strip().split()[-1].split("=")
+                environment[k] = v
+            os.environ.update(environment)
+
+            workflow_owner = os.environ["DM_STATION_NAME"].lower()
+            logger.info("APS DM workflow owner: %s", workflow_owner)
+        else:
+            logger.warning("APS DM setup file does not exist: '%s'", bash_script)
+
+
+def host_on_aps_subnet():
+    """Detect if this host is on an APS subnet."""
+    LOOPBACK_IP4 = "127.0.0.1"
+    PUBLIC_IP4_PREFIX = "164.54."
+    PRIVATE_IP4_PREFIX = "10.54."
+    TEST_IP = "10.254.254.254"  # does not have to be reachable
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+        sock.settimeout(0)
+        try:
+            sock.connect((TEST_IP, 1))
+            ip4 = sock.getsockname()[0]
+        except Exception:
+            ip4 = LOOPBACK_IP4
+    return True in [
+        ip4.startswith(PUBLIC_IP4_PREFIX),
+        ip4.startswith(PRIVATE_IP4_PREFIX),
+    ]
+
+
+
+---
+File: /src/instrument/utils/config_loaders.py
+---
+
+"""
+Load configuration files
+========================
+
+Load supported configuration files, such as ``iconfig.yml``.
+
+.. autosummary::
+    ~load_config_yaml
+    ~IConfigFileVersionError
+"""
+
+import logging
+import pathlib
+
+import yaml
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+instrument_path = pathlib.Path(__file__).parent.parent
+DEFAULT_ICONFIG_YML_FILE = instrument_path / "configs" / "iconfig.yml"
+ICONFIG_MINIMUM_VERSION = "2.0.0"
+
+
+def load_config_yaml(iconfig_yml=None) -> dict:
+    """
+    Load iconfig.yml (and other YAML) configuration files.
+
+    Parameters
+    ----------
+    iconfig_yml: str
+        Name of the YAML file to be loaded.  The name can be
+        absolute or relative to the current working directory.
+        Default: ``INSTRUMENT/configs/iconfig.yml``
+    """
+
+    if iconfig_yml is None:
+        path = DEFAULT_ICONFIG_YML_FILE
+    else:
+        path = pathlib.Path(iconfig_yml)
+    if not path.exists():
+        raise FileExistsError(f"Configuration file '{path}' does not exist.")
+    iconfig = yaml.load(open(path, "r").read(), yaml.Loader)
+    return iconfig
+
+
+class IConfigFileVersionError(ValueError):
+    """Configuration file version too old."""
+
+
+iconfig = load_config_yaml(DEFAULT_ICONFIG_YML_FILE)
+
+# Validate the iconfig file has the minimum version.
+_version = iconfig.get("ICONFIG_VERSION")
+if _version is None or _version < ICONFIG_MINIMUM_VERSION:
+    raise IConfigFileVersionError(
+        "Configuration file version too old."
+        f" Found {_version!r}."
+        f" Expected minimum {ICONFIG_MINIMUM_VERSION!r}."
+        f" Configuration file '{DEFAULT_ICONFIG_YML_FILE}'."
+    )
+
+
+
+---
+File: /src/instrument/utils/controls_setup.py
+---
+
+"""
+EPICS & ophyd related setup
+===========================
+
+.. autosummary::
+    ~oregistry
+    ~set_control_layer
+    ~set_timeouts
+    ~epics_scan_id_source
+    ~connect_scan_id_pv
+"""
+
+import logging
+
+import ophyd
+from ophyd.signal import EpicsSignalBase
+from ophydregistry import Registry
+
+from .config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+re_config = iconfig.get("RUN_ENGINE", {})
+
+DEFAULT_CONTROL_LAYER = "PyEpics"
+DEFAULT_TIMEOUT = 60  # default used next...
+ophyd_config = iconfig.get("OPHYD", {})
+
+
+def epics_scan_id_source(_md):
+    """
+    Callback function for RunEngine.  Returns *next* scan_id to be used.
+
+    * Ignore metadata dictionary passed as argument.
+    * Get current scan_id from PV.
+    * Apply lower limit of zero.
+    * Increment (so that scan_id numbering starts from 1).
+    * Set PV with new value.
+    * Return new value.
+
+    Exception will be raised if PV is not connected when next
+    ``bps.open_run()`` is called.
+    """
+    scan_id_epics = oregistry.find(name="scan_id_epics")
+    new_scan_id = max(scan_id_epics.get(), 0) + 1
+    scan_id_epics.put(new_scan_id)
+    return new_scan_id
+
+
+def connect_scan_id_pv(RE, pv: str = None):
+    """
+    Define a PV to use for the RunEngine's `scan_id`.
+    """
+    from ophyd import EpicsSignal
+
+    pv = pv or re_config.get("SCAN_ID_PV")
+    if pv is None:
+        return
+
+    try:
+        scan_id_epics = EpicsSignal(pv, name="scan_id_epics")
+    except TypeError:  # when Sphinx substitutes EpicsSignal with _MockModule
+        return
+    logger.info("Using EPICS PV %r for RunEngine 'scan_id'", pv)
+
+    # Setup the RunEngine to call epics_scan_id_source()
+    # which uses the EPICS PV to provide the scan_id.
+    RE.scan_id_source = epics_scan_id_source
+
+    scan_id_epics.wait_for_connection()
+    try:
+        RE.md["scan_id_pv"] = scan_id_epics.pvname
+        RE.md["scan_id"] = scan_id_epics.get()  # set scan_id from EPICS
+    except TypeError:
+        pass  # Ignore PersistentDict errors that only raise when making the docs
+
+
+def set_control_layer(control_layer: str = DEFAULT_CONTROL_LAYER):
+    """
+    Communications library between ophyd and EPICS Channel Access.
+
+    Choices are: PyEpics (default) or caproto.
+
+    OPHYD_CONTROL_LAYER is an application of "lessons learned."
+
+    Only used in a couple rare cases where PyEpics code was failing.
+    It's defined here since it was difficult to find how to do this
+    in the ophyd documentation.
+    """
+
+    control_layer = ophyd_config.get("CONTROL_LAYER", control_layer)
+    ophyd.set_cl(control_layer.lower())
+
+    logger.info("using ophyd control layer: %r", ophyd.cl.name)
+
+
+def set_timeouts():
+    """Set default timeout for all EpicsSignal connections & communications."""
+    if not EpicsSignalBase._EpicsSignalBase__any_instantiated:
+        # Only BEFORE any EpicsSignalBase (or subclass) are created!
+        timeouts = ophyd_config.get("TIMEOUTS", {})
+        EpicsSignalBase.set_defaults(
+            auto_monitor=True,
+            timeout=timeouts.get("PV_READ", DEFAULT_TIMEOUT),
+            write_timeout=timeouts.get("PV_WRITE", DEFAULT_TIMEOUT),
+            connection_timeout=iconfig.get("PV_CONNECTION", DEFAULT_TIMEOUT),
+        )
+
+
+oregistry = Registry(auto_register=True)
+"""Registry of all ophyd-style Devices and Signals."""
+oregistry.warn_duplicates = False
+
+
+
+---
+File: /src/instrument/utils/helper_functions.py
+---
+
+"""
+Generic utility helper functions
+================================
+
+.. autosummary::
+    ~register_bluesky_magics
+    ~running_in_queueserver
+    ~debug_python
+    ~mpl_setup
+    ~is_notebook
+"""
+
+import logging
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+from bluesky.magics import BlueskyMagics
+from bluesky_queueserver import is_re_worker_active
+from IPython import get_ipython
+
+from .config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+def register_bluesky_magics():
+    """The Bluesky Magick functions are useful with command-lines."""
+    _ipython = get_ipython()
+    if _ipython is not None:
+        _ipython.register_magics(BlueskyMagics)
+
+
+def running_in_queueserver():
+    """Detect if running in the bluesky queueserver."""
+    try:
+        active = is_re_worker_active()
+        # print(f"{active=!r}")
+        return active
+    except Exception as cause:
+        print(f"{cause=}")
+        return False
+
+
+def debug_python():
+    """"""
+    # terse error dumps (Exception tracebacks)
+    _ip = get_ipython()
+    if _ip is not None:
+        _xmode_level = iconfig.get("XMODE_DEBUG_LEVEL", "Minimal")
+        _ip.run_line_magic("xmode", _xmode_level)
+        print("\nEnd of IPython settings\n")
+        logger.bsdev("xmode exception level: '%s'", _xmode_level)
+
+
+def is_notebook():
+    """
+    Detect if running in a notebook.
+
+    see: https://stackoverflow.com/a/39662359/1046449
+    """
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == "ZMQInteractiveShell":
+            return True  # Jupyter notebook or qtconsole
+        elif shell == "TerminalInteractiveShell":
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+
+    except NameError:
+        return False  # Probably standard Python interpreter
+
+
+def mpl_setup():
+    """
+    Matplotlib setup based on environment (Notebook or non-Notebook).
+    """
+    if not running_in_queueserver():
+        if not is_notebook():
+            mpl.use("qtAgg")  # Set the backend early
+            plt.ion()
+
+
+
+---
+File: /src/instrument/utils/logging_setup.py
+---
+
+"""
+Configure logging for this session.
+
+.. rubric:: Public
+.. autosummary::
+    ~configure_logging
+
+.. rubric:: Internal
+.. autosummary::
+    ~_setup_console_logger
+    ~_setup_file_logger
+    ~_setup_ipython_logger
+    ~_setup_module_logging
+
+.. seealso:: https://blueskyproject.io/bluesky/main/debugging.html
+"""
+
+import logging
+import logging.handlers
+import os
+import pathlib
+
+BYTE = 1
+kB = 1024 * BYTE
+MB = 1024 * kB
+
+BRIEF_DATE = "%a-%H:%M:%S"
+BRIEF_FORMAT = "%(levelname)-.1s %(asctime)s.%(msecs)03d: %(message)s"
+DEFAULT_CONFIG_FILE = pathlib.Path(__file__).parent.parent / "configs" / "logging.yml"
+
+
+# Add your custom logging level at the top-level, before configure_logging()
+def addLoggingLevel(levelName, levelNum, methodName=None):
+    """
+    Comprehensively adds a new logging level to the `logging` module and the
+    currently configured logging class.
+
+    `levelName` becomes an attribute of the `logging` module with the value
+    `levelNum`. `methodName` becomes a convenience method for both `logging`
+    itself and the class returned by `logging.getLoggerClass()` (usually just
+    `logging.Logger`). If `methodName` is not specified, `levelName.lower()` is
+    used.
+
+    To avoid accidental clobberings of existing attributes, this method will
+    raise an `AttributeError` if the level name is already an attribute of the
+    `logging` module or if the method name is already present
+
+    Example
+    -------
+    >>> addLoggingLevel('TRACE', logging.INFO - 5)
+    >>> logging.getLogger(__name__).setLevel("TEST")
+    >>> logging.getLogger(__name__).test('that worked')
+    >>> logging.test('so did this')
+    >>> logging.TEST
+    5
+
+    """
+    if not methodName:
+        methodName = levelName.lower()
+
+    if hasattr(logging, levelName):
+        raise AttributeError("{} already defined in logging module".format(levelName))
+    if hasattr(logging, methodName):
+        raise AttributeError("{} already defined in logging module".format(methodName))
+    if hasattr(logging.getLoggerClass(), methodName):
+        raise AttributeError("{} already defined in logger class".format(methodName))
+
+    # This method was inspired by the answers to Stack Overflow post
+    # http://stackoverflow.com/q/2183233/2988730, especially
+    # http://stackoverflow.com/a/13638084/2988730
+    def logForLevel(self, message, *args, **kwargs):
+        if self.isEnabledFor(levelNum):
+            self._log(levelNum, message, args, **kwargs)
+
+    def logToRoot(message, *args, **kwargs):
+        logging.log(levelNum, message, *args, **kwargs)
+
+    logging.addLevelName(levelNum, levelName)
+    setattr(logging, levelName, levelNum)
+    setattr(logging.getLoggerClass(), methodName, logForLevel)
+    setattr(logging, methodName, logToRoot)
+
+
+addLoggingLevel("BSDEV", logging.INFO - 5)
+
+
+def configure_logging():
+    """Configure logging as described in file."""
+    from .config_loaders import load_config_yaml
+
+    # (Re)configure the root logger.
+    logger = logging.getLogger(__name__).root
+    logger.debug("logger=%r", logger)
+
+    config_file = os.environ.get("BLUESKY_INSTRUMENT_CONFIG_FILE")
+    if config_file is None:
+        config_file = DEFAULT_CONFIG_FILE
+    else:
+        config_file = pathlib.Path(config_file)
+
+    logging_configuration = load_config_yaml(config_file)
+    for part, cfg in logging_configuration.items():
+        logging.debug("%r - %s", part, cfg)
+
+        if part == "console_logs":
+            _setup_console_logger(logger, cfg)
+
+        elif part == "file_logs":
+            _setup_file_logger(logger, cfg)
+
+        elif part == "ipython_logs":
+            _setup_ipython_logger(logger, cfg)
+
+        elif part == "modules":
+            _setup_module_logging(cfg)
+
+
+def _setup_console_logger(logger, cfg):
+    """
+    Reconfigure the root logger as configured by the user.
+
+    We can't apply user configurations in ``configure_logging()`` above
+    because the code to read the config file triggers initialization of
+    the logging system.
+
+    .. seealso:: https://docs.python.org/3/library/logging.html#logging.basicConfig
+    """
+    logging.basicConfig(
+        encoding="utf-8",
+        level=cfg["root_level"].upper(),
+        format=cfg["log_format"],
+        datefmt=cfg["date_format"],
+        force=True,  # replace any previous setup
+    )
+    h = logger.handlers[0]
+    h.setLevel(cfg["level"].upper())
+
+
+def _setup_file_logger(logger, cfg):
+    """Record log messages in file(s)."""
+    formatter = logging.Formatter(
+        fmt=cfg["log_format"],
+        datefmt=cfg["date_format"],
+        style="%",
+        validate=True,
+    )
+    formatter.default_msec_format = "%s.%03d"
+
+    backupCount = cfg.get("backupCount", 9)
+    maxBytes = cfg.get("maxBytes", 1 * MB)
+    log_path = pathlib.Path(cfg.get("log_directory", ".logs")).resolve()
+    if not log_path.exists():
+        os.makedirs(str(log_path))
+
+    file_name = log_path / cfg.get("log_filename_base", "logging.log")
+    if maxBytes > 0 or backupCount > 0:
+        backupCount = max(backupCount, 1)  # impose minimum standards
+        maxBytes = max(maxBytes, 100 * kB)
+        handler = logging.handlers.RotatingFileHandler(
+            file_name,
+            maxBytes=maxBytes,
+            backupCount=backupCount,
+        )
+    else:
+        handler = logging.FileHandler(file_name)
+    handler.setFormatter(formatter)
+    if cfg.get("rotate_on_startup", False):
+        handler.doRollover()
+    logger.addHandler(handler)
+    logger.info("%s Bluesky Startup Initialized", "*" * 40)
+    logger.bsdev(__file__)
+    logger.bsdev("Log file: %s", file_name)
+
+
+def _setup_ipython_logger(logger, cfg):
+    """
+    Internal: Log IPython console session In and Out to a file.
+
+    See ``logrotate?`` int he IPython console for more information.
+    """
+    log_path = pathlib.Path(cfg.get("log_directory", ".logs")).resolve()
+    try:
+        from IPython import get_ipython
+
+        # start logging console to file
+        # https://ipython.org/ipython-doc/3/interactive/magics.html#magic-logstart
+        _ipython = get_ipython()
+        log_file = log_path / cfg.get("log_filename_base", "ipython_log.py")
+        log_mode = cfg.get("log_mode", "rotate")
+        options = cfg.get("options", "-o -t")
+        if _ipython is not None:
+            print(
+                "\nBelow are the IPython logging settings for your session."
+                "\nThese settings have no impact on your experiment.\n"
+            )
+            _ipython.magic(f"logstart {options} {log_file} {log_mode}")
+            if logger is not None:
+                logger.bsdev("Console logging: %s", log_file)
+    except Exception as exc:
+        if logger is None:
+            print(f"Could not setup console logging: {exc}")
+        else:
+            logger.exception("Could not setup console logging.")
+
+
+def _setup_module_logging(cfg):
+    """Internal: Set logging level for each named module."""
+    for module, level in cfg.items():
+        logging.getLogger(module).setLevel(level.upper())
+
+
+
+---
+File: /src/instrument/utils/make_devices_yaml.py
+---
+
+"""
+Make devices from YAML files
+=============================
+
+Construct ophyd-style devices from simple specifications in YAML files.
+
+.. autosummary::
+    :nosignatures:
+
+    ~make_devices
+    ~Instrument
+"""
+
+import logging
+import pathlib
+import sys
+import time
+
+import guarneri
+from apstools.plans import run_blocking_function
+from apstools.utils import dynamic_import
+from bluesky import plan_stubs as bps
+
+from .aps_functions import host_on_aps_subnet
+from .config_loaders import iconfig
+from .config_loaders import load_config_yaml
+from .controls_setup import oregistry  # noqa: F401
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+configs_path = pathlib.Path(__file__).parent.parent / "configs"
+main_namespace = sys.modules["__main__"]
+local_control_devices_file = iconfig["DEVICES_FILE"]
+aps_control_devices_file = iconfig["APS_DEVICES_FILE"]
+
+
+def make_devices(*, pause: float = 1):
+    """
+    (plan stub) Create the ophyd-style controls for this instrument.
+
+    Feel free to modify this plan to suit the needs of your instrument.
+
+    EXAMPLE::
+
+        RE(make_devices())
+
+    PARAMETERS
+
+    pause : float
+        Wait 'pause' seconds (default: 1) for slow objects to connect.
+
+    """
+    logger.debug("(Re)Loading local control objects.")
+    yield from run_blocking_function(
+        _loader, configs_path / local_control_devices_file, main=True
+    )
+
+    if host_on_aps_subnet():
+        yield from run_blocking_function(
+            _loader, configs_path / aps_control_devices_file, main=True
+        )
+
+    if pause > 0:
+        logger.debug(
+            "Waiting %s seconds for slow objects to connect.",
+            pause,
+        )
+        yield from bps.sleep(pause)
+
+    # Configure any of the controls here, or in plan stubs
+
+
+def _loader(yaml_device_file, main=True):
+    """
+    Load our ophyd-style controls as described in a YAML file.
+
+    PARAMETERS
+
+    yaml_device_file : str or pathlib.Path
+        YAML file describing ophyd-style controls to be created.
+    main : bool
+        If ``True`` add these devices to the ``__main__`` namespace.
+
+    """
+    logger.debug("Devices file %r.", str(yaml_device_file))
+    t0 = time.time()
+    _instr.load(yaml_device_file)
+    logger.debug("Devices loaded in %.3f s.", time.time() - t0)
+
+    if main:
+        for label in oregistry.device_names:
+            # add to __main__ namespace
+            setattr(main_namespace, label, oregistry[label])
+
+
+class Instrument(guarneri.Instrument):
+    """Custom YAML loader for guarneri."""
+
+    def parse_yaml_file(self, config_file: pathlib.Path | str) -> list[dict]:
+        """Read device configurations from YAML format file."""
+        if isinstance(config_file, str):
+            config_file = pathlib.Path(config_file)
+
+        def parser(class_name, specs):
+            if class_name not in self.device_classes:
+                self.device_classes[class_name] = dynamic_import(class_name)
+            entries = [
+                {
+                    "device_class": class_name,
+                    "args": (),  # ALL specs are kwargs!
+                    "kwargs": table,
+                }
+                for table in specs
+            ]
+            return entries
+
+        devices = [
+            device
+            # parse the file
+            for k, v in load_config_yaml(config_file).items()
+            # each support type (class, factory, function, ...)
+            for device in parser(k, v)
+        ]
+        return devices
+
+
+_instr = Instrument({}, registry=oregistry)  # singleton
+
+
+
+---
+File: /src/instrument/utils/metadata.py
+---
+
+"""
+RunEngine Metadata
+==================
+
+.. autosummary::
+    ~MD_PATH
+    ~get_md_path
+    ~re_metadata
+"""
+
+import getpass
+import logging
+import os
+import pathlib
+import socket
+import sys
+
+import apstools
+import bluesky
+import databroker
+import epics
+import h5py
+import intake
+import matplotlib
+import numpy
+import ophyd
+import pyRestTable
+import pysumreg
+import spec2nexus
+
+from .config_loaders import iconfig
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+re_config = iconfig.get("RUN_ENGINE", {})
+
+DEFAULT_MD_PATH = pathlib.Path.home() / ".config" / "Bluesky_RunEngine_md"
+HOSTNAME = socket.gethostname() or "localhost"
+USERNAME = getpass.getuser() or "Bluesky user"
+VERSIONS = dict(
+    apstools=apstools.__version__,
+    bluesky=bluesky.__version__,
+    databroker=databroker.__version__,
+    epics=epics.__version__,
+    h5py=h5py.__version__,
+    intake=intake.__version__,
+    matplotlib=matplotlib.__version__,
+    numpy=numpy.__version__,
+    ophyd=ophyd.__version__,
+    pyRestTable=pyRestTable.__version__,
+    python=sys.version.split(" ")[0],
+    pysumreg=pysumreg.__version__,
+    spec2nexus=spec2nexus.__version__,
+)
+RE_CONFIG = iconfig.get("RUN_ENGINE", {})
+
+
+def get_md_path():
+    """
+    Get path for RE metadata.
+
+    ==============  ==============================================
+    support         path
+    ==============  ==============================================
+    PersistentDict  Directory where dictionary keys are stored in separate files.
+    StoredDict      File where dictionary is stored as YAML.
+    ==============  ==============================================
+
+    In either case, the 'path' can be relative or absolute.  Relative
+    paths are with respect to the present working directory when the
+    bluesky session is started.
+    """
+    md_path_name = RE_CONFIG.get("MD_PATH", DEFAULT_MD_PATH)
+    path = pathlib.Path(md_path_name)
+    logger.info("RunEngine metadata saved in directory: %s", str(path))
+    return str(path)
+
+
+def re_metadata(cat=None):
+    """Programmatic metadata for the RunEngine."""
+    md = {
+        "login_id": f"{USERNAME}@{HOSTNAME}",
+        "versions": VERSIONS,
+        "pid": os.getpid(),
+        "iconfig": iconfig,
+    }
+    if cat is not None:
+        md["databroker_catalog"] = cat.name
+    md.update(RE_CONFIG.get("DEFAULT_METADATA", {}))
+
+    conda_prefix = os.environ.get("CONDA_PREFIX")
+    if conda_prefix is not None:
+        md["conda_prefix"] = conda_prefix
+    return md
+
+
+MD_PATH = get_md_path()
+"""Storage path to save RE metadata between sessions."""
+
+
+
+---
+File: /src/instrument/utils/stored_dict.py
+---
+
+"""
+Storage-backed Dictionary
+=========================
+
+A dictionary that writes its contents to YAML file.
+
+Replaces ``bluesky.utils.PersistentDict``.
+
+* Contents must be JSON serializable.
+* Contents stored in a single human-readable YAML file.
+* Sync to disk shortly after dictionary is updated.
+
+.. autosummary::
+
+    ~StoredDict
+"""
+
+__all__ = ["StoredDict"]
+
+import collections.abc
+import datetime
+import inspect
+import json
+import logging
+import pathlib
+import threading
+import time
+
+import yaml
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+
+class StoredDict(collections.abc.MutableMapping):
+    """
+    Dictionary that syncs to storage.
+
+    .. autosummary::
+
+        ~flush
+        ~popitem
+        ~reload
+
+    .. rubric:: Static methods
+
+    All support for the YAML format is implemented in the static methods.
+
+    .. autosummary::
+
+        ~dump
+        ~load
+
+    ----
+    """
+
+    def __init__(self, file, delay=5, title=None, serializable=True):
+        """
+        StoredDict : Dictionary that syncs to storage
+
+        PARAMETERS
+
+        file : str or pathlib.Path
+            Name of file to store dictionary contents.
+        delay : number
+            Time delay (s) since last dictionary update to write to storage.
+            Default: 5 seconds.
+        title : str or None
+            Comment to write at top of file.
+            Default: "Written by StoredDict."
+        serializable : bool
+            If True, validate new dictionary entries are JSON serializable.
+        """
+        self._file = pathlib.Path(file)
+        self._delay = max(0, delay)
+        self._title = title or f"Written by {self.__class__.__name__}."
+        self.test_serializable = serializable
+
+        self.sync_in_progress = False
+        self._sync_deadline = time.time()
+        self._sync_key = f"sync_agent_{id(self):x}"
+        self._sync_loop_period = 0.005
+
+        self._cache = {}
+        self.reload()
+
+    def __delitem__(self, key):
+        """Delete dictionary value by key."""
+        del self._cache[key]
+
+    def __getitem__(self, key):
+        """Get dictionary value by key."""
+        return self._cache[key]
+
+    def __iter__(self):
+        """Iterate over the dictionary keys."""
+        yield from self._cache
+
+    def __len__(self):
+        """Number of keys in the dictionary."""
+        return len(self._cache)
+
+    def __repr__(self):
+        """representation of this object."""
+        return f"<{self.__class__.__name__} {dict(self)!r}>"
+
+    def __setitem__(self, key, value):
+        """Write to the dictionary."""
+        outermost_frame = inspect.getouterframes(inspect.currentframe())[-1]
+        if "sphinx-build" in outermost_frame.filename:
+            # Seems that Sphinx is building the documentation.
+            # Ignore all the objects it tries to add.
+            return
+
+        if self.test_serializable:
+            json.dumps({key: value})
+
+        self._cache[key] = value  # Store the new (or revised) content.
+
+        # Reset the deadline.
+        self._sync_deadline = time.time() + self._delay
+        logger.debug("new sync deadline in %f s.", self._delay)
+
+        if not self.sync_in_progress:
+            # Start the sync_agent (thread).
+            self._delayed_sync_to_storage()
+
+    def _delayed_sync_to_storage(self):
+        """
+        Sync the metadata to storage.
+
+        Start a time-delay thread.  New writes to the metadata dictionary will
+        extend the deadline.  Sync once the deadline is reached.
+        """
+
+        def sync_agent():
+            """Threaded task."""
+            logger.debug("Starting sync_agent...")
+            self.sync_in_progress = True
+            while time.time() < self._sync_deadline:
+                time.sleep(self._sync_loop_period)
+            logger.debug("Sync waiting period ended")
+            self.sync_in_progress = False
+
+            StoredDict.dump(self._file, self._cache, title=self._title)
+
+        thred = threading.Thread(target=sync_agent)
+        thred.start()
+
+    def flush(self):
+        """Force a write of the dictionary to disk"""
+        logger.debug("flush()")
+        if not self.sync_in_progress:
+            StoredDict.dump(self._file, self._cache, title=self._title)
+        self._sync_deadline = time.time()
+        self.sync_in_progress = False
+
+    def popitem(self):
+        """
+        Remove and return a (key, value) pair as a 2-tuple.
+
+        Pairs are returned in LIFO (last-in, first-out) order.
+        Raises KeyError if the dict is empty.
+        """
+        return self._cache.popitem()
+
+    def reload(self):
+        """Read dictionary from storage."""
+        logger.debug("reload()")
+        self._cache = StoredDict.load(self._file)
+
+    @staticmethod
+    def dump(file, contents, title=None):
+        """Write dictionary to YAML file."""
+        logger.debug("_dump(): file='%s', contents=%r, title=%r", file, contents, title)
+        with open(file, "w") as f:
+            if isinstance(title, str) and len(title) > 0:
+                f.write(f"# {title}\n")
+            f.write(f"# Dictionary contents written: {datetime.datetime.now()}\n\n")
+            f.write(yaml.dump(contents, indent=2))
+
+    @staticmethod
+    def load(file):
+        """Read dictionary from YAML file."""
+        from .config_loaders import load_config_yaml
+
+        file = pathlib.Path(file)
+        logger.debug("_load('%s')", file)
+        md = None
+        if file.exists():
+            md = load_config_yaml(file)
+        return md or {}  # In case file is empty.
+
+
+
+---
+File: /src/instrument/__init__.py
+---
+
+# -*- coding: iso-8859-1 -*-
+
+"""Model Bluesky Data Acquisition Instrument."""
+
+from .utils.logging_setup import configure_logging
+
+configure_logging()
+
+__package__ = "instrument"
+try:
+    from setuptools_scm import get_version
+
+    __version__ = get_version(root="..", relative_to=__file__)
+    del get_version
+except (LookupError, ModuleNotFoundError):
+    from importlib.metadata import version
+
+    __version__ = version(__package__)
+
+
+
+---
+File: /src/instrument/LICENSE
+---
+
+Copyright (c) 2023-2025, UChicago Argonne, LLC
+
+All Rights Reserved
+
+instrument
+
+BCDA, Advanced Photon Source, Argonne National Laboratory
+
+
+OPEN SOURCE LICENSE
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.  Software changes,
+   modifications, or derivative works, should be noted with comments and
+   the author and organization's name.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the names of UChicago Argonne, LLC or the Department of Energy
+   nor the names of its contributors may be used to endorse or promote
+   products derived from this software without specific prior written
+   permission.
+
+4. The software and the end-user documentation included with the
+   redistribution, if any, must include the following acknowledgment:
+
+   "This product includes software produced by UChicago Argonne, LLC
+   under Contract No. DE-AC02-06CH11357 with the Department of Energy."
+
+****************************************************************************
+
+DISCLAIMER
+
+THE SOFTWARE IS SUPPLIED "AS IS" WITHOUT WARRANTY OF ANY KIND.
+
+Neither the United States GOVERNMENT, nor the United States Department
+of Energy, NOR uchicago argonne, LLC, nor any of their employees, makes
+any warranty, express or implied, or assumes any legal liability or
+responsibility for the accuracy, completeness, or usefulness of any
+information, data, apparatus, product, or process disclosed, or
+represents that its use would not infringe privately owned rights.
+
+****************************************************************************
+
+
+
+---
+File: /src/instrument/startup.py
+---
+
+"""
+Start Bluesky Data Acquisition sessions of all kinds.
+
+Includes:
+
+* Python script
+* IPython console
+* Jupyter notebook
+* Bluesky queueserver
+"""
+
+import logging
+
+from .core.best_effort_init import bec  # noqa: F401
+from .core.best_effort_init import peaks  # noqa: F401
+from .core.catalog_init import cat  # noqa: F401
+from .core.run_engine_init import RE  # noqa: F401
+from .core.run_engine_init import sd  # noqa: F401
+from .devices import *  # noqa: F403
+from .plans import *  # noqa: F403
+
+# Bluesky data acquisition setup
+from .utils.config_loaders import iconfig
+from .utils.helper_functions import register_bluesky_magics
+from .utils.helper_functions import running_in_queueserver
+from .utils.make_devices_yaml import make_devices
+
+logger = logging.getLogger(__name__)
+logger.bsdev(__file__)
+
+if iconfig.get("USE_BLUESKY_MAGICS", False):
+    register_bluesky_magics()
+
+# Configure the session with callbacks, devices, and plans.
+if iconfig.get("NEXUS_DATA_FILES") is not None:
+    from .callbacks.nexus_data_file_writer import nxwriter  # noqa: F401
+
+if iconfig.get("SPEC_DATA_FILES") is not None:
+    from .callbacks.spec_data_file_writer import newSpecFile  # noqa: F401
+    from .callbacks.spec_data_file_writer import spec_comment  # noqa: F401
+    from .callbacks.spec_data_file_writer import specwriter  # noqa: F401
+
+# These imports must come after the above setup.
+if running_in_queueserver():
+    ### To make all the standard plans available in QS, import by '*', otherwise import
+    ### plan by plan.
+    from apstools.plans import lineup2  # noqa: F401
+    from bluesky.plans import *  # noqa: F403
+
+else:
+    # Import bluesky plans and stubs with prefixes set by common conventions.
+    # The apstools plans and utils are imported by '*'.
+    from apstools.plans import *  # noqa: F403
+    from apstools.utils import *  # noqa: F403
+    from bluesky import plan_stubs as bps  # noqa: F401
+    from bluesky import plans as bp  # noqa: F401
+
+    from .utils.controls_setup import oregistry  # noqa: F401
+
+RE(make_devices())  # create all the ophyd-style control devices
+
+
+
+---
+File: /.gitignore
+---
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+#   For a library or package, you might want to ignore these files since the code is
+#   intended to run in multiple environments; otherwise, check them in:
+# .python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# poetry
+#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
+#   This is especially recommended for binary packages to ensure reproducibility, and is more
+#   commonly ignored for libraries.
+#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
+#poetry.lock
+
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#pdm.lock
+#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+#   in version control.
+#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+#.idea/
+
+# setuptools_scm
+_version.py
+
+# Developer content
+dev_*
+
+qserver/existing_plans_and_devices.yaml
+.vscode/
+.logs/
+*.dat
+*.hdf
+
+# Local Run Engine metadata dictionary
+.re_md_dict.yml
+
+
+
+---
+File: /.pre-commit-config.yaml
+---
+
+# hint: pre-commit run --all-files
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # exclude_types: [jupyter]
+      - id: check-yaml
+      - id: check-toml
+      - id: check-ast
+      # - id: check-docstring-first  # let variables have docstrings
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: mixed-line-ending
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-case-conflict
+      # - id: check-json
+      # - id: check-symlinks
+      - id: check-executables-have-shebangs
+  # Don't strip output from jupyter notebooks ATM.
+  # - repo: https://github.com/kynan/nbstripout
+  #   rev: 0.7.1
+  #   hooks:
+  #     - id: nbstripout
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.8
+    hooks:
+      - id: ruff # replaces Flake8, isort, pydocstyle, pyupgrade
+        args:
+          - --fix
+      - id: ruff-format # replaces Black
+
+
+
+---
+File: /pyproject.toml
+---
+
+[build-system]
+requires = ["setuptools>=64.0", "setuptools_scm[toml]>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.copyright]
+copyright = "2014-2025, APS"
+
+[project]
+name = "instrument"
+dynamic = ["version"]
+description = "Model of a Bluesky Data Acquisition Instrument in console, notebook, & queueserver."
+authors = [
+    { name = "Eric Codrea", email = "ecodrea@anl.gov" },
+    { name = "Pete Jemian", email = "prjemian+instrument@gmail.com" },
+    { name = "Rafael Vescovi", email = "rvescovi@anl.gov" },
+]
+maintainers = [
+    { name = "Eric Codrea", email = "ecodrea@anl.gov" },
+    { name = "Pete Jemian", email = "prjemian+instrument@gmail.com" },
+    { name = "Rafael Vescovi", email = "rvescovi@anl.gov" },
+]
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ['bluesky', 'queueserver']
+license = { file = "src/instrument/LICENSE" }
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "License :: Freely Distributable",
+    "License :: Public Domain",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "apstools >= 1.7.2",
+    "bluesky-queueserver-api",
+    "bluesky-queueserver",
+    "bluesky-widgets",
+    "bluesky",
+    "databroker ==1.2.5",
+    "guarneri",
+    "ipython",
+    "jupyterlab",
+    "ophyd-registry",
+    "ophyd",
+    "PyQt5>5.15",
+    "pyRestTable",
+    "pysumreg",
+    "qtpy",
+]
+
+[project.optional-dependencies]
+dev = ["build", "isort", "mypy", "pre-commit", "pytest", "ruff"]
+
+# doc: conda install conda-forge::pandoc
+doc = [
+    "babel",
+    "ipykernel",
+    "jinja2",
+    "markupsafe",
+    "myst_parser",
+    "nbsphinx",
+    "pygments-ipython-console",
+    "pygments",
+    "sphinx-design",
+    "sphinx-tabs",
+    "sphinx",
+]
+
+all = ["instrument[dev,doc]"]
+
+[project.urls]
+"Homepage" = "https://BCDA-APS.github.io/bs_model_instrument/"
+"Bug Tracker" = "https://github.com/BCDA-APS/bs_model_instrument/issues"
+
+# [project.scripts]
+# instrument = "instrument.app:main"
+
+[tool.black]
+line-length = 115
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | \.pytest_cache
+    | _build
+    | build
+    | dist
+    | docs
+  )/
+)
+'''
+
+
+[tool.flake8]
+max-line-length = 115
+extend-ignore = [
+    "E203", # See https://github.com/PyCQA/pycodestyle/issues/373
+    "E402", # module level import not at top of file (for cansas.py)
+    "E501",
+    "F401", # imported but unused
+    "F405", # symbol may be undefined, or defined from star imports
+    "F722", # allow Annotated[typ, some_func("some string")]
+    "F811", # support typing.overload decorator
+    "W503",
+    "W504",
+]
+
+[tool.isort]
+force_single_line = true
+# multi_line_output = 1
+line_length = 88
+include_trailing_comma = true
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/stable/customize.html
+addopts = ["--import-mode=importlib", "-x"]
+junit_family = "xunit1"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.ruff]
+# https://docs.astral.sh/ruff/configuration/
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "build",
+    "dist",
+    "venv",
+    ".venv",
+    "docs",
+]
+
+# Same as Black.
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.11
+target-version = "py311"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    # "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    # "SIM",
+    # isort
+    "I",
+    # Warning
+    "W",
+    # pydocstyle
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    # ruff
+    # "RUF"
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"*.ipynb" = [
+    "F405", # symbol may be undefined, or defined from star imports
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true # Enforces single-line imports
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+[tool.setuptools]
+package-dir = {"instrument" = "src/instrument"}
+
+[tool.setuptools.package-data]
+"*" = ["*.yml"]
+
+[tool.setuptools_scm]
+write_to = "src/instrument/_version.py"
+
+
+
+---
+File: /README.md
+---
+
+# Model Package for Bluesky Instrument Minimal Installation
+
+Model of a Bluesky Data Acquisition Instrument in console, notebook, &
+queueserver.
+
+## Installation
+
+Clone the repository.
+
+```bash
+git clone git@github.com:BCDA-APS/bs_model_instrument.git
+cd bs_model_instrument
+```
+
+Set up the development environment.
+
+```bash
+export ENV_NAME=bs_model_env
+conda create -y -n $ENV_NAME python=3.11 pyepics
+conda activate $ENV_NAME
+pip install -e ."[all]"
+```
+
+## IPython console
+
+To start the bluesky instrument session in a ipython execute the next command in a terminal:
+
+```bash
+ipython
+```
+
+Inside the ipython console execute:
+
+```py
+from instrument.startup import *
+```
+
+## Jupyter notebook
+
+Start JupyterLab, a Jupyter notebook server, or a notebook, VSCode.
+
+Start the data acquisition:
+
+```py
+from instrument.startup import *
+```
+
+## Sim Plan Demo
+
+To run some simulated plans that ensure the installation worked as expected
+please run the next commands inside an ipython session or a jupyter notebook
+after starting the data acquisition:
+
+```py
+RE(sim_print_plan())
+RE(sim_count_plan())
+RE(sim_rel_scan_plan())
+```
+
+See this [example](./docs/source/demo.ipynb).
+
+## Configuration files
+
+The files that can be configured to adhere to your preferences are:
+
+- `configs/iconfig.yml` - configuration for data collection
+- `configs/logging.yml` - configuration for session logging to console and/or files
+- `qserver/qs-config.yml`    - contains all configuration of the QS host process. See the [documentation](https://blueskyproject.io/bluesky-queueserver/manager_config.html) for more details of the configuration.
+
+## queueserver
+
+The queueserver has a host process that manages a RunEngine. Client sessions
+will interact with that host process.
+
+### Run a queueserver host process
+
+Use the queueserver host management script to start the QS host process.  The
+`restart` option stops the server (if it is running) and then starts it.  This is
+the usual way to (re)start the QS host process. Using `restart`, the process
+runs in the background.
+
+```bash
+./qserver/qs_host.sh restart
+```
+
+### Run a queueserver client GUI
+
+To run the gui client for the queueserver you can use the next command inside the terminal:
+
+```bash
+queue-monitor &
+```
+
+### Shell script explained
+
+A [shell script](./qserver/qs_host.sh) is used to start the QS host process. Below
+are all the command options, and what they do.
+
+```bash
+(bstest) $ ./qserver/qs_host.sh help
+Usage: qs_host.sh {start|stop|restart|status|checkup|console|run} [NAME]
+
+    COMMANDS
+        console   attach to process console if process is running in screen
+        checkup   check that process is running, restart if not
+        restart   restart process
+        run       run process in console (not screen)
+        start     start process
+        status    report if process is running
+        stop      stop process
+
+    OPTIONAL TERMS
+        NAME      name of process (default: bluesky_queueserver-)
+```
+
+Alternatively, run the QS host's startup command directly within the `./qserver/`
+subdirectory.
+
+```bash
+cd ./qserver
+start-re-manager --config=./qs-config.yml
+```
+
+## Testing
+
+Use this command to run the test suite locally:
+
+```bash
+pytest -vvv --lf ./src
+```
+
+## Documentation
+
+<details>
+<summary>prerequisite</summary>
+
+To build the documentation locally, install [`pandoc`](https://pandoc.org/) in
+your conda environment:
+
+```bash
+conda install conda-forge::pandoc
+```
+
+</details>
+
+Use this command to build the documentation locally:
+
+```bash
+make -C docs clean html
+```
+
+Once the documentation builds, view the HTML pages using your web browser:
+
+```bash
+BROWSER ./docs/build/html/index.html &
+```
+
+### Adding to the documentation source
+
+The documentation source is located in files and directories under
+`./docs/source`.  Various examples are provided.
+
+Documentation can be added in these formats:
+[`.rst`](https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html)
+(reStructured text), [`.md`](https://en.wikipedia.org/wiki/Markdown) (markdown),
+and [`.ipynb`](https://jupyter.org/) (Jupyter notebook). For more information,
+see the [Sphinx](https://www.sphinx-doc.org/) documentation.
+
+## Warnings
+
+### Bluesky Queueserver
+
+The QS host process writes files into the `qserver/` directory. This directory can be
+relocated. However, it should not be moved into the instrument package since
+that might be installed into a read-only directory.
+
+## How-To Guides
+### How to use the template
+
+Consider renaming this `instrument` package to be more clear that is specific to *this*
+instrument.  This will be the name by which it is `pip` installed and also used with
+`import`.  Let's use an example instrument package name `my_instrument` below to show which parts are edited.
+
+1) Click on use as template button
+2) Adjust the following parameters in the following files:
+    - `pyproject.toml`
+        - `[project]` `name =` *example: `my_instrument`*
+        - `[project.urls]`  *change URLs for your repo*
+        - `[tool.setuptools]` `package-dir = {"instrument" = "src/instrument"}` *example: `{"my_instrument" = "src/instrument"}`*
+    - `src/instrument/init.py`
+        - `__package__ = "instrument"` *example: `"my_instrument"`*
+    - `src/instrument/configs/iconfig.yml`
+        - `DATABROKER_CATALOG:` *change from `temp` to your catalog's name*
+        - `beamline_id:` *one word beamline name (such as known by APS scheduling system)*
+        - `instrument_name:` *descriptive name of your beamline*
+        - `DM_SETUP_FILE:` *Path to DM bash setup file, comment out if you do not have*
+        - `BEC:` *adjust for your preferences*
+    - `qserver/qs-config.yml`
+        - `startup_module: instrument.startup` *example: `my_instrument.startup`*
+    - `docs/source/conf.py`
+        - `import instrument` *example `import my_instrument`*
+        - `project = "instrument"` *example: `"my_instrument"`*
+        - `version = instrument.__version__` *example: `my_instrument.__version__`*
+
+- [APS Data Management Plans](./docs/source/guides/dm.md)
