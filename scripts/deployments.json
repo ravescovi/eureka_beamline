@@ -1,0 +1,22 @@
+[
+    {
+      "name": "8id_bits",
+      "url": "https://github.com/aps-8id-dys/bluesky"
+    },
+    {
+      "name": "12id_bits",
+      "url": "https://github.com/APS-USAXS/bluesky"
+    },
+    {
+      "name": "16bmb_bits",
+      "url": "https://github.com/BCDA-APS/16bmb_bits"
+    },
+    {
+      "name": "32id_bits",
+      "url": "https://github.com/BCDA-APS/tomo-bits"
+    },
+    {
+      "name": "haven",
+      "url": "https://github.com/spc-group/haven"
+    }
+  ]

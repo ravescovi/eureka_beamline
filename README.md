@@ -1,3 +1,5 @@
+#Outdated
+
 # Beamline REPO
 
 This repository houses the configuration files, device definitions, and control scripts used for beamline instrumentation at the APS. It is designed for Bluesky development and the integration of hardware and software components in our experiments.
