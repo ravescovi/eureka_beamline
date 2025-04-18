@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CI Agent Schema",
+  "description": "Schema for continuous integration and deployment tasks",
+  "type": "object",
+  "required": ["action"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["lint", "test", "build", "deploy", "check_dependencies"],
+      "description": "The action to perform"
+    },
+    "target": {
+      "type": "string",
+      "description": "Target component or directory to process"
+    },
+    "options": {
+      "type": "object",
+      "description": "Additional options for the action",
+      "properties": {
+        "run_tests": {
+          "type": "boolean",
+          "description": "Whether to run tests"
+        },
+        "run_linters": {
+          "type": "boolean",
+          "description": "Whether to run linters"
+        },
+        "check_types": {
+          "type": "boolean",
+          "description": "Whether to run type checking"
+        },
+        "generate_coverage": {
+          "type": "boolean",
+          "description": "Whether to generate coverage reports"
+        },
+        "environment": {
+          "type": "string",
+          "enum": ["development", "testing", "staging", "production"],
+          "description": "Target environment for deployment"
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Notification settings for CI results",
+      "properties": {
+        "notify_on_failure": {
+          "type": "boolean",
+          "description": "Whether to send notifications on failure"
+        },
+        "notify_on_success": {
+          "type": "boolean",
+          "description": "Whether to send notifications on success"
+        },
+        "notification_channels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["email", "slack", "github"]
+          },
+          "description": "Channels to send notifications to"
+        }
+      }
+    }
+  }
+} 

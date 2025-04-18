@@ -1,77 +1,96 @@
-#Outdated
+# Eureka Beamline
 
-# Beamline REPO
+A comprehensive toolkit for beamline control and automation, featuring both a VS Code extension and FastAPI backend services.
 
-This repository houses the configuration files, device definitions, and control scripts used for beamline instrumentation at the APS. It is designed for Bluesky development and the integration of hardware and software components in our experiments.
+## Project Structure
 
-## Folder Structure
+```
+/eureka_beamline/                ← Root monorepo
+├── shared/                      ← Shared schemas and utilities
+├── backend/                     ← FastAPI agent service
+├── recipes/                     ← Deployment recipes and example workflows
+├── scripts/                     ← Utility scripts for automation and setup
+├── docker-compose.yml           ← Dev orchestration (backend + soft-IOCs)
+└── README.md                    ← This file
+```
 
-Beamline REPO/
-├── Documents/ 
-│ ├── IOC_table.yaml 
-│ ├── PV_table.yaml 
-│ ├── BITS_devices_table.yaml 
-│ ├── BITS_test_plans_table.yaml 
-│ └── BITS_user_plans_table.yaml 
-├── BITS/ 
-│ ├── Devices/ 
-│ │ └── Device List 
-│ ├── Plans/ 
-│ │ └── Bluesky Plans ... 
-│ └── Test Plans/ 
-│ └── Test Plans List ... 
-├── IOCs/ 
-│ └── ADCameraSim/ 
-├── Soft IOCs/ 
-│ └── RobotSimPy/ 
-└── Scripts/
+## Quick Start
 
+### Prerequisites
 
-## Folder Descriptions
+- Docker and Docker Compose
+- VS Code with [BitsCode Extension](https://github.com/ravescovi/bitscode)
+- Python 3.11+
+- Node.js 16+
 
-### Documents
-Contains YAML configuration files that define key aspects of beamline operations:
-- **IOC_table.yaml**: Lists all Input/Output Controllers (IOCs) interfacing with beamline hardware.
-- **PV_table.yaml**: Defines the process variables (PVs) essential for instrument control and monitoring.
-- **BITS_devices_table.yaml**: Provides a detailed table of beamline devices managed under the BITS framework.
-- **BITS_test_plans_table.yaml**: Contains configurations and metadata for test plans used to validate Bluesky plan execution.
-- **BITS_user_plans_table.yaml**: Stores user-defined plans and custom configurations for personalized experimental workflows.
+### Local Development Setup
 
-### BITS
-Houses the core Bluesky plans and device definitions:
-- **Devices**:  
-  - **Device List**: A comprehensive list of all beamline devices available for control.
-- **Plans**:  
-  - **Bluesky Plans ...**: Scripts that automate standard beamline procedures, including data acquisition and instrument control.
-- **Test Plans**:  
-  - **Test Plans List ...**: Contains test scripts and sequences for validating and debugging Bluesky plans prior to deployment on hardware.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-org/eureka_beamline.git
+   cd eureka_beamline
+   ```
 
-### IOCs
-Includes implementations of hardware controllers:
-- **ADCameraSim**: A simulated IOC for the ADCamera, used to test camera control routines and integrate camera data into Bluesky workflows.
+2. Start the backend and soft-IOCs:
+   ```bash
+   docker-compose up --build
+   ```
 
-### Soft IOCs
-Contains software-based (soft) IOCs that simulate hardware behavior:
-- **RobotSimPy**: A Python-based soft IOC that simulates a robotic system. This is particularly useful for developing and troubleshooting automated beamline operations in a controlled environment.
+3. Install the BitsCode VS Code extension:
+   - Visit [BitsCode Extension Repository](https://github.com/ravescovi/bitscode)
+   - Follow the installation instructions in the repository
 
-### Scripts
-This folder is dedicated to additional utility scripts and workflow automation tools to support day-to-day operations, testing, and development tasks.
+## Backend Service
 
-## Getting Started
+The backend service is built with FastAPI and provides RESTful endpoints for various beamline agents:
 
-1. **Environment Setup**  
-   Ensure you have the appropriate Python environment with Bluesky, ophyd, and any other required packages installed.
+- IOC Analyzer
+- Device Generator
+- Plan Generator
 
-2. **Configuration**  
-   Update the YAML configuration files in the **Documents** folder to reflect your current beamline setup.
+### API Documentation
 
-3. **Development & Testing**  
-   - Use the scripts in the **BITS/Plans** folder for standard beamline operations.
-   - Run tests from the **BITS/Test Plans** folder to validate new plan developments.
-   - For hardware simulation, refer to the IOCs and Soft IOCs folders.
-   - Utilize the **Scripts** folder for additional utility tasks and workflow automation.
+Once the backend is running, visit:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
-4. **Further Documentation**  
-   Consult the APS beamline management documentation or contact the Bluesky development team for further instructions and guidelines.
+## VS Code Extension
 
-Happy experimenting!
+The BitsCode VS Code extension provides an integrated development experience for beamline control. The extension is maintained in a separate repository:
+
+- [BitsCode Extension Repository](https://github.com/ravescovi/bitscode)
+- Command Palette integration
+- Context menu actions
+- Task list visualization
+- Agent logs and error messages
+
+## Adding New Agents
+
+1. Define the agent schema in `shared/agent-schemas/`
+2. Implement the backend router in `backend/routers/`
+3. Create the VS Code command in the [BitsCode Extension Repository](https://github.com/ravescovi/bitscode)
+4. Add tests in respective test directories
+
+## Development Guidelines
+
+- Use type hints and docstrings for all Python code
+- Follow PEP 257 for docstring conventions
+- Write tests using pytest
+- Use Ruff for linting
+- Keep the shared schemas in sync between frontend and backend
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and linting
+5. Submit a pull request
+
+## License
+
+[Your License Here]
+
+## Contact
+
+[Your Contact Information]
